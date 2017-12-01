@@ -1,18 +1,21 @@
 
-body {
+div.crossword_wrapper {
   font: 62.5%/1.3em Helvetica, sans-serif;
   width: 90.3%;
   margin: 10px auto;
 }
-table {
+
+table.crossword_wrapper {
   border-collapse: collapse;
   border-spacing: 0;
-  max-width: 100%;
-}
-table tr{
   width: 100%;
 }
-table td {
+
+table.crossword_wrapper tr{
+  width: 100%;
+}
+
+table.crossword td {
   width: 5em;
   height: 5em;
   border: 1px solid #cdcdcd;
@@ -22,7 +25,7 @@ table td {
     position: relative;
 }
 
-td input {
+td.crossword input {
   width: 100%;
   height: 100%;
   padding: 0em;
@@ -33,11 +36,11 @@ td input {
     background-color: #f4f4f4;
 }
 
-td input:focus {
+td.crossword input:focus {
   background-color: #fff;
 }
 
-td span {
+td.crossword span {
   color: #444;
     font-size: 0.8em;
   position: absolute;
@@ -45,32 +48,33 @@ td span {
   left: 1px;
 }
 
-input.done {
+input.done.crossword {
   font-weight: bold;
   color: green;
 }
 
-.active,
-.clues-active {
+.crossword.active,
+.crossword.clues-active {
   background-color: #ddd;
 }
-.clue-done {
+.crossword.clue-done {
   color: #999;
     text-decoration: line-through;
 }
 
-#puzzle-wrapper {
+.crossword.puzzle-wrapper {
 float: left;
 width: 54%;
 margin-right: 3%;
 }
-#puzzle-clues {
-float: left;
-width: 40%;
+
+.crossword.puzzle-clues {
+  float: left;
+  width: 40%;
 }
 
-#puzzle-clues li{
-font-size: 1.2em;
-margin: .3em;
-line-height: 1.6em;
+.crossword_wrapepr.puzzle-clues li{
+  font-size: 1.2em;
+  margin: .3em;
+  line-height: 1.6em;
 }
