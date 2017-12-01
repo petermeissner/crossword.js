@@ -1,8 +1,8 @@
-// A javascript-enhanced crossword puzzle [c] Jesse Weisbeck, MIT/GPL 
+// A javascript-enhanced crossword puzzle [c] Jesse Weisbeck, MIT/GPL
 (function($) {
 	$(function() {
 		// provide crossword entries in an array of objects like the following example
-		// Position refers to the numerical order of an entry. Each position can have 
+		// Position refers to the numerical order of an entry. Each position can have
 		// two entries: an across entry and a down entry
 		var puzzleData = [
 			 	{
@@ -41,7 +41,7 @@
 					clue: "Complex resistances",
 					answer: "impedances",
 					position: 10,
-					orientation: "across",	
+					orientation: "across",
 					startx: 2,
 					starty: 7
 				},
@@ -149,10 +149,10 @@
 					startx: 7,
 					starty: 9
 				}
-			] 
-	
+			]
+
 		$('#puzzle-wrapper').crossword(puzzleData);
-		
+
 	})
-	
+
 })(jQuery)
