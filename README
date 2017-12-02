@@ -1,1 +1,9 @@
-I built this crossword puzzle to provide an enhanced, more intuitive user experience with javascript.
+# crossword.js
+
+A Javascript module to visualize crosswords. 
+
+- show crossword
+- show clues / questions
+- interactively solve crossword
+
+
