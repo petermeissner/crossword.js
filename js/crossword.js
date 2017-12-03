@@ -117,18 +117,30 @@ crossword =
           for ( i = 0; i < puzzle_data.length; i++ ) {
             if ( puzzle_data[i].orientation == "down" ) {
               dimensions.columns = 
-                Math.max(dimensions.columns, puzzle_data[i].x);
+                Math.max(
+                  dimensions.columns, 
+                  puzzle_data[i].x
+                );
               
                 dimensions.rows = 
-                Math.max(dimensions.rows, puzzle_data[i].y + puzzle_data[i].answer.length);
+                  Math.max(
+                    dimensions.rows, 
+                    puzzle_data[i].y + puzzle_data[i].answer.length
+                  );
 
             } else if( puzzle_data[i].orientation == "across" ) {
               
               dimensions.columns = 
-                Math.max(dimensions.columns, puzzle_data[i].x + puzzle_data[i].answer.length);
+                Math.max(
+                  dimensions.columns, 
+                  puzzle_data[i].x + puzzle_data[i].answer.length
+                );
               
               dimensions.rows = 
-                Math.max(dimensions.rows, puzzle_data[i].y)
+                Math.max(
+                  dimensions.rows, 
+                  puzzle_data[i].y
+                )
             }
           }
 
@@ -136,18 +148,39 @@ crossword =
           return dimensions;
       };
 
-
-      // ---- crossword API ---------------------------------------------------
-
-      crossword.init = function(puzzle_data){
+      // - building grid table
+      crossword.cw_helper.build_grid_table = function(puzzle_data){
         
         // - sort puzzle data
         crossword.cw_helper.sort_puzzle_data(puzzle_data);
         
         // - calculate dimensions of grid
-        var puzzle_dimensions = crossword.cw_helper.calculate_dimensions(puzzle_data);
+        var puzzle_dimensions = 
+          crossword.cw_helper.calculate_dimensions(puzzle_data);
 
-      }
+        // build html
+          // - table start 
+          var grid_table = ["<table class='puzzle_grid'>"];
+            
+          // - cycle through rows and add table rows and elements
+          for (var i = 1; i <= puzzle_dimensions.rows; ++i) {
+            // - start of row
+            grid_table.push("<tr>");
+              // - add elements
+              for (var x = 1; x <= puzzle_dimensions.columns; ++x) {
+                grid_table.push('<td data-coords="' + x + ',' + i + '"></td>');
+              };
+            // - end of row
+            grid_table.push("</tr>");
+          };
+          // end of table
+          grid_table.push("</table>")
+          
+        // return 
+        return grid_table.join('');
+      };
+
+      // ---- crossword API ---------------------------------------------------
 
       // - adding crossword to element
       crossword.append_to_element = function(el, id) {
@@ -158,26 +191,21 @@ crossword =
         // add crossword to DOM element
         cw_html =  
           $.parseXML(
-            '<div class = "crossword_wrapper puzzle-clues" id = "' + id + '">' + 
-              ' <table class = "crossword_wrapper" >' +
-              '  <tr   class = "crossword_wrapper" >' +
-              '   <td  class = "crossword_wrapper" >' +
-              '    <div class = "crossword_wrapper puzzle_wrapper" >Puzzle</div>' + 
-              '   </td>' + 
-              '   <td  class = "crossword_wrapper" >' +
-              '    <div class = "crossword_wrapper" >Across</div>' + 
-              '    <ol class = "crossword_wrapper across" ></ol>' + 
-              '   </td>' + 
-              '   <td class = "crossword_wrapper">' +
-              '    <div class = "crossword_wrapper" >Down</div>' + 
-              '    <ol class = "crossword_wrapper down" ></ol>' + 
-              '   </td>' + 
-              ' </tr></table>' +
+            '<div class = "crossword_wrapper" id = "' + id + '">' + 
+              '    <div class = "crossword_wrapper puzzle_wrapper"></div>' + 
+              '    <div class = "crossword_wrapper across_wrapper"></div>' + 
+              '    <div class = "crossword_wrapper down_wrapper"></div>' + 
             '</div>'
           );
         
+        // write basic structure to DOM
         $(el).append(cw_html.documentElement);
         
+        // add grid table to puzzle wrapper
+        $("#" + id + " .puzzle_wrapper")
+          .append(
+            crossword.cw_helper.build_grid_table(crossword.example_data)
+          );
       }
 
       // return crossword module 

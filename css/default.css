@@ -4,6 +4,21 @@ div.crossword_wrapper {
   margin: 10px auto;
 }
 
+table.puzzle_grid{
+  border-collapse: collapse;
+  border: 1px solid silver;
+}
+
+table.puzzle_grid tr, th, td {
+  border-collapse: collapse;
+  border: 1px solid silver;
+  width: 1.4em;
+  height: 1.4em;
+}
+
+
+
+/*
 table.crossword_wrapper {
   border-collapse: collapse;
   border-spacing: 0;
@@ -77,3 +92,4 @@ margin-right: 3%;
   margin: .3em;
   line-height: 1.6em;
 }
+*/
