@@ -105,7 +105,7 @@ crossword =
         )
       };
 
-      // - calculate dimensions of grid
+      // - calculate dimensions of grid // DEV TODO !!!! : somehting is wrong here
       crossword.cw_helper.calculate_dimensions = function(puzzle_data){
         // object to be updated and returned later on
         dimensions = 
@@ -179,6 +179,73 @@ crossword =
         // return 
         return grid_table.join('');
       };
+
+      // - building a grid 
+      crossword.cw_helper.build_grid = function(puzzle_data){
+        
+        // - calculate dimensions of grid
+        var puzzle_dimensions = 
+          crossword.cw_helper.calculate_dimensions(puzzle_data);
+        
+        // build grid 
+        var puzzle_grid = Array(puzzle_data.rows);
+        for ( rows = 0; rows < puzzle_dimensions.rows; rows++ ){
+          
+          // fill in arrays
+          puzzle_grid[rows] = Array(puzzle_dimensions.columns);
+
+            // fill arrays with default data
+            for ( cols = 0; cols < puzzle_dimensions.columns; cols++ ){
+
+              puzzle_grid[rows][cols] = 
+                {
+                  type: "empty",
+                  letter: ""
+                };
+            }
+        }
+
+        // fill grid 
+        for (i = 0; i < puzzle_data.length; i++){
+          var y                = puzzle_data[i].x;
+          var x                = puzzle_data[i].y;
+          var word             = puzzle_data[i].answer;
+          var word_orientation = puzzle_data[i].orientation;
+          
+          if ( word_orientation === "across" ) {
+            for ( k = 0; k < word.length; k++ ) {
+              
+              // assign letter to cell
+              puzzle_grid[y - 1][x - 1 + k].letter = word[k];              
+              // update type of cell
+              if ( puzzle_grid[y - 1][x - 1 + k].type === "down" ){
+                puzzle_grid[y - 1][x - 1 + k].type = "both";
+              }else{
+                puzzle_grid[y - 1][x - 1 + k].type = "across";
+              }
+
+            }
+          } else if ( word_orientation === "down" ) {
+            for ( k = 0; k < word.length; k++ ) {
+              // assign letter to cell
+              puzzle_grid[y - 1 + k][x - 1].letter = word[k];
+            
+              // update type of cell
+              if ( puzzle_grid[y - 1 + k][x - 1].type === "down" ){
+                puzzle_grid[y - 1 + k][x - 1].type = "both";
+              }else{
+                puzzle_grid[y - 1 + k][x - 1].type = "down";
+              }
+            }
+          }
+          
+        }
+
+        // DEV - TODO !!!! : some error happens .. out of range?
+
+        // return grid 
+        return puzzle_grid;
+      } 
 
       // ---- crossword API ---------------------------------------------------
 
