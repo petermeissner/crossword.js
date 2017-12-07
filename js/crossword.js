@@ -158,8 +158,11 @@ crossword =
         var puzzle_dimensions = 
           crossword.cw_helper.calculate_dimensions(puzzle_data);
 
+        // - build grid
+        var puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
+
         // build html
-          // - table start 
+           // - table start 
           var grid_table = ["<table class='puzzle_grid'>"];
             
           // - cycle through rows and add table rows and elements
@@ -168,7 +171,12 @@ crossword =
             grid_table.push("<tr>");
               // - add elements
               for (var x = 1; x <= puzzle_dimensions.columns; ++x) {
-                grid_table.push('<td data-coords="' + x + ',' + i + '"></td>');
+                grid_table.push(
+                  '<td ' + 
+                    'data-coords="' + x + ',' + i + '" ' + 
+                    'class="' + puzzle_grid.get_cell(x, i).type +
+                  '"></td>'
+                );
               };
             // - end of row
             grid_table.push("</tr>");
@@ -188,16 +196,16 @@ crossword =
           crossword.cw_helper.calculate_dimensions(puzzle_data);
         
         // build grid 
-        var puzzle_grid = Array(puzzle_data.rows);
+        var puzzle_grid_data = Array(puzzle_data.rows);
         for ( rows = 0; rows < puzzle_dimensions.rows; rows++ ){
           
           // fill in arrays
-          puzzle_grid[rows] = Array(puzzle_dimensions.columns);
+          puzzle_grid_data[rows] = Array(puzzle_dimensions.columns);
 
             // fill arrays with default data
             for ( cols = 0; cols < puzzle_dimensions.columns; cols++ ){
 
-              puzzle_grid[rows][cols] = 
+              puzzle_grid_data[rows][cols] = 
                 {
                   type: "empty",
                   letter: ""
@@ -216,30 +224,52 @@ crossword =
             for ( k = 0; k < word.length; k++ ) {
               
               // assign letter to cell
-              puzzle_grid[y - 1][x - 1 + k].letter = word[k];              
+              puzzle_grid_data[y - 1][x - 1 + k].letter = word[k];              
               // update type of cell
-              if ( puzzle_grid[y - 1][x - 1 + k].type === "down" ){
-                puzzle_grid[y - 1][x - 1 + k].type = "both";
+              if ( puzzle_grid_data[y - 1][x - 1 + k].type === "down" ){
+                puzzle_grid_data[y - 1][x - 1 + k].type = "both";
               }else{
-                puzzle_grid[y - 1][x - 1 + k].type = "across";
+                puzzle_grid_data[y - 1][x - 1 + k].type = "across";
               }
 
             }
           } else if ( word_orientation === "down" ) {
             for ( k = 0; k < word.length; k++ ) {
               // assign letter to cell
-              puzzle_grid[y - 1 + k][x - 1].letter = word[k];
+              puzzle_grid_data[y - 1 + k][x - 1].letter = word[k];
             
               // update type of cell
-              if ( puzzle_grid[y - 1 + k][x - 1].type === "down" ){
-                puzzle_grid[y - 1 + k][x - 1].type = "both";
+              if ( puzzle_grid_data[y - 1 + k][x - 1].type === "down" ){
+                puzzle_grid_data[y - 1 + k][x - 1].type = "both";
               }else{
-                puzzle_grid[y - 1 + k][x - 1].type = "down";
+                puzzle_grid_data[y - 1 + k][x - 1].type = "down";
               }
             }
           }
           
         }
+
+        var puzzle_grid = 
+        {
+          "data": puzzle_grid_data,
+          
+          "get_cell": function(x, y){
+            // check input 
+            if( x === undefined || y === undefined || x < 1 || y < 1 ){
+              throw("Cannot check cell, parameter input error.");
+            }
+
+            // filter elements according to coordinates
+            var cell = this.data[x - 1][y - 1];
+            // return
+            return cell  
+          },
+
+          // check if cell entry is correct
+          "check_cell": function(x, y, letter){
+            return this.get_cell(x,y).letter === letter;
+          }
+        };
 
         // return grid 
         return puzzle_grid;
