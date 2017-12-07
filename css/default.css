@@ -16,6 +16,13 @@ table.puzzle_grid tr, th, td {
   height: 1.4em;
 }
 
+td.empty {
+  background-color: black;
+}
+
+td.start {
+  background-color: rgb(248, 237, 180);
+}
 
 
 /*

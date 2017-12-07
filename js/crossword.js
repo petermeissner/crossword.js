@@ -174,7 +174,7 @@ crossword =
                 grid_table.push(
                   '<td ' + 
                     'data-coords="' + x + ',' + i + '" ' + 
-                    'class="' + puzzle_grid.get_cell(x, i).type +
+                    'class="' + puzzle_grid.get_cell(x, i).type.join(" ") +
                   '"></td>'
                 );
               };
@@ -207,7 +207,7 @@ crossword =
 
               puzzle_grid_data[rows][cols] = 
                 {
-                  type: "empty",
+                  type: ["empty", "nostart"],
                   letter: ""
                 };
             }
@@ -226,12 +226,17 @@ crossword =
               // assign letter to cell
               puzzle_grid_data[y - 1][x - 1 + k].letter = word[k];              
               // update type of cell
-              if ( puzzle_grid_data[y - 1][x - 1 + k].type === "down" ){
-                puzzle_grid_data[y - 1][x - 1 + k].type = "both";
+              if ( puzzle_grid_data[y - 1][x - 1 + k].type[0] === "down" ){
+                puzzle_grid_data[y - 1][x - 1 + k].type[0] = "both";
+              }else if ( puzzle_grid_data[y - 1][x - 1 + k].type[0] == "empty" ){
+                puzzle_grid_data[y - 1][x - 1 + k].type[0] = "across";
               }else{
-                puzzle_grid_data[y - 1][x - 1 + k].type = "across";
+                puzzle_grid_data[y - 1][x - 1 + k].type[0]= "across";
               }
-
+              
+              if( k === 0 ){
+                puzzle_grid_data[y - 1][x - 1 + k].type[1] = "start";
+              }
             }
           } else if ( word_orientation === "down" ) {
             for ( k = 0; k < word.length; k++ ) {
@@ -239,15 +244,21 @@ crossword =
               puzzle_grid_data[y - 1 + k][x - 1].letter = word[k];
             
               // update type of cell
-              if ( puzzle_grid_data[y - 1 + k][x - 1].type === "down" ){
-                puzzle_grid_data[y - 1 + k][x - 1].type = "both";
+              if ( puzzle_grid_data[y - 1 + k][x - 1].type[0] === "down" ){
+                puzzle_grid_data[y - 1 + k][x - 1].type[0] = "both";
+              }else if ( puzzle_grid_data[y - 1 + k][x - 1].type[0] == "empty" ){
+                puzzle_grid_data[y - 1 + k][x - 1].type[0] = "down";
               }else{
-                puzzle_grid_data[y - 1 + k][x - 1].type = "down";
+                  puzzle_grid_data[y - 1 + k][x - 1].type[0] = "down";
+              }
+
+              if( k === 0 ){
+                  puzzle_grid_data[y - 1 + k][x - 1].type[1] = "start";
               }
             }
           }
-          
         }
+
 
         var puzzle_grid = 
         {
