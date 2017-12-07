@@ -105,10 +105,10 @@ crossword =
         )
       };
 
-      // - calculate dimensions of grid // DEV TODO !!!! : somehting is wrong here
+      // - calculate dimensions of grid 
       crossword.cw_helper.calculate_dimensions = function(puzzle_data){
         // object to be updated and returned later on
-        dimensions = 
+        var dimensions = 
           {
             "rows":    0, 
             "columns": 0
@@ -140,7 +140,7 @@ crossword =
                 Math.max(
                   dimensions.rows, 
                   puzzle_data[i].y
-                )
+                );
             }
           }
 
@@ -207,8 +207,8 @@ crossword =
 
         // fill grid 
         for (i = 0; i < puzzle_data.length; i++){
-          var y                = puzzle_data[i].x;
-          var x                = puzzle_data[i].y;
+          var x                = puzzle_data[i].x;
+          var y                = puzzle_data[i].y;
           var word             = puzzle_data[i].answer;
           var word_orientation = puzzle_data[i].orientation;
           
@@ -240,8 +240,6 @@ crossword =
           }
           
         }
-
-        // DEV - TODO !!!! : some error happens .. out of range?
 
         // return grid 
         return puzzle_grid;
