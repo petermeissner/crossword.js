@@ -137,56 +137,18 @@ crossword =
                 );
               
               dimensions.rows = 
-                Math.max(
-                  dimensions.rows, 
-                  puzzle_data[i].y
-                );
+              Math.max(
+                dimensions.rows, 
+                puzzle_data[i].y
+              );
             }
           }
-
+          
           // return
           return dimensions;
-      };
+        };
 
-      // - building grid table
-      crossword.cw_helper.build_grid_table = function(puzzle_data){
         
-        // - sort puzzle data
-        crossword.cw_helper.sort_puzzle_data(puzzle_data);
-        
-        // - calculate dimensions of grid
-        var puzzle_dimensions = 
-          crossword.cw_helper.calculate_dimensions(puzzle_data);
-
-        // - build grid
-        var puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
-
-        // build html
-           // - table start 
-          var grid_table = ["<table class='puzzle_grid'>"];
-            
-          // - cycle through rows and add table rows and elements
-          for (var i = 1; i <= puzzle_dimensions.rows; ++i) {
-            // - start of row
-            grid_table.push("<tr>");
-              // - add elements
-              for (var x = 1; x <= puzzle_dimensions.columns; ++x) {
-                grid_table.push(
-                  '<td ' + 
-                    'data-coords="' + x + ',' + i + '" ' + 
-                    'class="' + puzzle_grid.get_cell(x, i).type.join(" ") +
-                  '"></td>'
-                );
-              };
-            // - end of row
-            grid_table.push("</tr>");
-          };
-          // end of table
-          grid_table.push("</table>")
-          
-        // return 
-        return grid_table.join('');
-      };
 
       // - building a grid 
       crossword.cw_helper.build_grid = function(puzzle_data){
@@ -207,55 +169,40 @@ crossword =
 
               puzzle_grid_data[rows][cols] = 
                 {
-                  type: ["empty", "nostart"],
-                  letter: ""
+                  letter: "",
+                  words: new Set(),
+                  directions: new Set(),
+                  number: Number(undefined)
                 };
             }
         }
 
+        var number_counter = 0;
+
         // fill grid 
         for (i = 0; i < puzzle_data.length; i++){
-          var x                = puzzle_data[i].x;
-          var y                = puzzle_data[i].y;
+          
+          var x                = puzzle_data[i].x -1;
+          var y                = puzzle_data[i].y -1;
           var word             = puzzle_data[i].answer;
           var word_orientation = puzzle_data[i].orientation;
-          
-          if ( word_orientation === "across" ) {
-            for ( k = 0; k < word.length; k++ ) {
-              
-              // assign letter to cell
-              puzzle_grid_data[y - 1][x - 1 + k].letter = word[k];              
-              // update type of cell
-              if ( puzzle_grid_data[y - 1][x - 1 + k].type[0] === "down" ){
-                puzzle_grid_data[y - 1][x - 1 + k].type[0] = "both";
-              }else if ( puzzle_grid_data[y - 1][x - 1 + k].type[0] == "empty" ){
-                puzzle_grid_data[y - 1][x - 1 + k].type[0] = "across";
-              }else{
-                puzzle_grid_data[y - 1][x - 1 + k].type[0]= "across";
-              }
-              
-              if( k === 0 ){
-                puzzle_grid_data[y - 1][x - 1 + k].type[1] = "start";
-              }
-            }
-          } else if ( word_orientation === "down" ) {
-            for ( k = 0; k < word.length; k++ ) {
-              // assign letter to cell
-              puzzle_grid_data[y - 1 + k][x - 1].letter = word[k];
-            
-              // update type of cell
-              if ( puzzle_grid_data[y - 1 + k][x - 1].type[0] === "down" ){
-                puzzle_grid_data[y - 1 + k][x - 1].type[0] = "both";
-              }else if ( puzzle_grid_data[y - 1 + k][x - 1].type[0] == "empty" ){
-                puzzle_grid_data[y - 1 + k][x - 1].type[0] = "down";
-              }else{
-                  puzzle_grid_data[y - 1 + k][x - 1].type[0] = "down";
-              }
+          var xk               = x;
+          var yk               = y;
 
-              if( k === 0 ){
-                  puzzle_grid_data[y - 1 + k][x - 1].type[1] = "start";
-              }
+          if ( isNaN(puzzle_grid_data[y][x].number) ){
+            number_counter = number_counter + 1;
+            puzzle_grid_data[y][x].number = number_counter;
+          }
+
+          for ( k = 0; k < word.length; k++ ) {
+            if( word_orientation == "across" ){
+              xk = x + k;
+            }else{
+              yk = y + k;
             }
+            puzzle_grid_data[yk][xk].letter = word[k];
+            puzzle_grid_data[yk][xk].directions.add(word_orientation);
+            puzzle_grid_data[yk][xk].words.add(i);
           }
         }
 
@@ -285,6 +232,68 @@ crossword =
         // return grid 
         return puzzle_grid;
       } 
+
+
+      // - building grid table
+      crossword.cw_helper.build_grid_table = function(puzzle_data){
+        
+        // - sort puzzle data
+        crossword.cw_helper.sort_puzzle_data(puzzle_data);
+        
+        // - calculate dimensions of grid
+        var puzzle_dimensions = 
+          crossword.cw_helper.calculate_dimensions(puzzle_data);
+
+        // - build grid
+        var puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
+
+        // build html
+           // - table start 
+          var grid_table  = ["<table class='puzzle_grid'>"];
+          var cell_class  = ""; 
+          var number_attr = "";
+
+          // - cycle through rows and add table rows and elements
+          for (var i = 1; i <= puzzle_dimensions.rows; ++i) {
+            // - start of row
+            grid_table.push("<tr>");
+              // - add elements
+              for (var x = 1; x <= puzzle_dimensions.columns; ++x) {
+                // prepare class attribute
+                if ( puzzle_grid.get_cell(x, i).directions.size == 0 ){
+                  cell_class = "class='empty'";
+                }else{
+                  cell_class = 
+                    "class='" +  
+                    Array.from( puzzle_grid.get_cell(x, i).directions ).join(" ") + "'";
+                }
+                // prepare number attribute
+                if ( isNaN(puzzle_grid.get_cell(x, i).number) ){
+                  number_attr = "";
+                }else{
+                  number_attr = "number='" + puzzle_grid.get_cell(x, i).number + "'";
+                }
+                // push cells
+                grid_table.push(
+                  '<td ' + 
+                    'data-coords="' + x + ',' + i + '" ' + 
+                    cell_class + " " + 
+                    number_attr +
+                  '">'+ puzzle_grid.get_cell(x, i).letter.toUpperCase() +'</td>'
+                );
+              };
+            // - end of row
+            grid_table.push("</tr>");
+          };
+          // end of table
+          grid_table.push("</table>")
+          
+        // return 
+        return grid_table.join('');
+      };
+
+
+
 
       // ---- crossword API ---------------------------------------------------
 
