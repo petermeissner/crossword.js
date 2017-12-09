@@ -103,7 +103,42 @@ crossword =
             }
           }
         )
+
+        return puzzle_data;
       };
+
+      // - prepare puzzle_data
+      crossword.cw_helper.enmumerate_puzzle_data = function(puzzle_data){
+        var coordinates = [];
+        var number      = [];
+
+        for ( i = 0; i < puzzle_data.length; i++) {
+          // look up coordinates 
+          index = 
+            coordinates.findIndex( 
+              function(el){ 
+                return el.x === puzzle_data[i].x && el.y === puzzle_data[i].y ; 
+              } 
+            );
+
+          if ( index === -1 ) {
+            // if coordinates not registered yet ...
+            // - register coordinates
+            coordinates.push({"x": puzzle_data[ i ].x, "y": puzzle_data[ i ].y});
+            // - register new number 
+            number.push( number.length + 1 );
+            // - add number to puzzle_data
+            puzzle_data[ i ].number = number[ number.length - 1 ];
+          }else{
+            // if coordinates have already been registered ...
+            // - use lookup to retrieve number and assign to current puzzle_data element
+            puzzle_data[ i ].number = number[ index ];
+          }
+        }
+        
+        return puzzle_data;
+      };
+
 
       // - calculate dimensions of grid 
       crossword.cw_helper.calculate_dimensions = function(puzzle_data){
@@ -152,7 +187,12 @@ crossword =
 
       // - building a grid 
       crossword.cw_helper.build_grid = function(puzzle_data){
-        
+        // - sort puzzle data
+        puzzle_data = crossword.cw_helper.sort_puzzle_data(puzzle_data);        
+
+        // - enumerate questions - same coordinates -> same number 
+        puzzle_data = crossword.cw_helper.enmumerate_puzzle_data(puzzle_data);        
+
         // - calculate dimensions of grid
         var puzzle_dimensions = 
           crossword.cw_helper.calculate_dimensions(puzzle_data);
@@ -172,7 +212,8 @@ crossword =
                   letter: "",
                   words: new Set(),
                   directions: new Set(),
-                  number: Number(undefined)
+                  number: new Set(),
+                  start: false
                 };
             }
         }
@@ -188,11 +229,10 @@ crossword =
           var word_orientation = puzzle_data[i].orientation;
           var xk               = x;
           var yk               = y;
-
-          if ( isNaN(puzzle_grid_data[y][x].number) ){
-            number_counter = number_counter + 1;
-            puzzle_grid_data[y][x].number = number_counter;
-          }
+          var number           = puzzle_data[i].number;
+          
+          // mark start
+          puzzle_grid_data[yk][xk].start = true; 
 
           for ( k = 0; k < word.length; k++ ) {
             if( word_orientation == "across" ){
@@ -200,9 +240,11 @@ crossword =
             }else{
               yk = y + k;
             }
-            puzzle_grid_data[yk][xk].letter = word[k];
             puzzle_grid_data[yk][xk].directions.add(word_orientation);
             puzzle_grid_data[yk][xk].words.add(i);
+            puzzle_grid_data[yk][xk].number.add(number);
+            puzzle_grid_data[yk][xk].letter = word[k];
+
           }
         }
 
@@ -237,9 +279,6 @@ crossword =
       // - building grid table
       crossword.cw_helper.build_grid_table = function(puzzle_data){
         
-        // - sort puzzle data
-        crossword.cw_helper.sort_puzzle_data(puzzle_data);
-        
         // - calculate dimensions of grid
         var puzzle_dimensions = 
           crossword.cw_helper.calculate_dimensions(puzzle_data);
@@ -255,10 +294,12 @@ crossword =
 
           // - cycle through rows and add table rows and elements
           for (var i = 1; i <= puzzle_dimensions.rows; ++i) {
+            
             // - start of row
             grid_table.push("<tr>");
               // - add elements
               for (var x = 1; x <= puzzle_dimensions.columns; ++x) {
+                
                 // prepare class attribute
                 if ( puzzle_grid.get_cell(x, i).directions.size == 0 ){
                   cell_class = "class='empty'";
@@ -267,24 +308,38 @@ crossword =
                     "class='" +  
                     Array.from( puzzle_grid.get_cell(x, i).directions ).join(" ") + "'";
                 }
+                
                 // prepare number attribute
-                if ( isNaN(puzzle_grid.get_cell(x, i).number) ){
+                if ( Array.from( puzzle_grid.get_cell(x,i).number ).length == 0 ){
                   number_attr = "";
                 }else{
-                  number_attr = "number='" + puzzle_grid.get_cell(x, i).number + "'";
+                  number_attr = "number='" + Array.from(puzzle_grid.get_cell(x, i).number).join(",") + "'";
                 }
+
+                // prepare start attribute
+                if ( puzzle_grid.get_cell(x,i).start ){
+                  start_attr = "start='true'";
+                }else{
+                  start_attr = "";
+                }
+                
                 // push cells
                 grid_table.push(
                   '<td ' + 
                     'data-coords="' + x + ',' + i + '" ' + 
                     cell_class + " " + 
-                    number_attr +
+                    number_attr + " " +
+                    start_attr + 
                   '">'+ puzzle_grid.get_cell(x, i).letter.toUpperCase() +'</td>'
                 );
+
               };
-            // - end of row
+            
+              // - end of row
             grid_table.push("</tr>");
+
           };
+
           // end of table
           grid_table.push("</table>")
           

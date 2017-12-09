@@ -20,7 +20,7 @@ table.puzzle_grid tr, th, td {
   background-color: black;
 }
 
-.puzzle_grid td[number] {
+.puzzle_grid td[start=true] {
   background-color: rgb(248, 237, 180);
 }
 
