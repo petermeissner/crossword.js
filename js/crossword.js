@@ -160,7 +160,7 @@ crossword =
                 dimensions.rows = 
                   Math.max(
                     dimensions.rows, 
-                    puzzle_data[i].y + puzzle_data[i].answer.length
+                    puzzle_data[i].y + puzzle_data[i].answer.length - 1
                   );
 
             } else if( puzzle_data[i].orientation == "across" ) {
@@ -168,7 +168,7 @@ crossword =
               dimensions.columns = 
                 Math.max(
                   dimensions.columns, 
-                  puzzle_data[i].x + puzzle_data[i].answer.length
+                  puzzle_data[i].x + puzzle_data[i].answer.length - 1
                 );
               
               dimensions.rows = 
