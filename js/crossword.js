@@ -348,6 +348,41 @@ crossword =
       };
 
 
+      // question list - across
+      crossword.cw_helper.build_question_list = function(puzzle_data, direction){
+        // - sort puzzle data
+        puzzle_data = crossword.cw_helper.sort_puzzle_data(puzzle_data);        
+        
+        // - enumerate questions - same coordinates -> same number 
+        puzzle_data = crossword.cw_helper.enmumerate_puzzle_data(puzzle_data);  
+
+        // build up list 
+        var across_list = ["<ul class='question_list "+ direction +"'>"] ;
+
+        for ( i = 0; i < puzzle_data.length; i++ ) {
+          if( puzzle_data[i].orientation === direction ){
+            across_list.push(
+              "<li " +
+                "number='" + puzzle_data[i].number + "'" +
+                "data-coords='" + 
+                  puzzle_data[i].x + "," + 
+                  puzzle_data[i].y + 
+                "'" +
+              ">" +  
+                "(" + puzzle_data[i].number + ") " +
+                puzzle_data[i].clue + 
+              "</li>"
+            )
+          }
+        }
+
+        across_list.push("</ol>");
+
+        // return
+        return across_list.join('');
+      }
+
+
 
 
       // ---- crossword API ---------------------------------------------------
@@ -376,6 +411,16 @@ crossword =
           .append(
             crossword.cw_helper.build_grid_table(crossword.example_data)
           );
+
+        $("#" + id + " .across_wrapper")
+          .append(
+            crossword.cw_helper.build_question_list(crossword.example_data, "across")
+          );
+
+        $("#" + id + " .down_wrapper")
+        .append(
+          crossword.cw_helper.build_question_list(crossword.example_data, "down")
+        );
       }
 
       // return crossword module 
