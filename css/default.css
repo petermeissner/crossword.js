@@ -1,7 +1,26 @@
+body {
+  font-family: 'Oswald', sans-serif;
+}
 
-div.crossword_wrapper {
-  font: 90%/2.3em Helvetica, sans-serif, bolder;
-  margin: 10px auto;
+.active {
+  color: darkmagenta;
+  font-size: 110%;
+  font-weight: bold;
+}
+
+.puzzle_wrapper {
+  text-align: -webkit-center;
+  margin: 5px;
+}
+
+.across_wrapper {
+  width: 45%;
+  float: left;
+}
+
+.down_wrapper {
+  width: 45%;
+  float: left;
 }
 
 table.puzzle_grid{
@@ -27,6 +46,17 @@ table.puzzle_grid tr, th, td {
 .puzzle_grid td {
   text-align: center;
   vertical-align: middle;
+  padding: 0;
+  margin: 0;
+}
+
+.puzzle_grid td input.puzzle_input {
+  text-transform: uppercase;
+  width: 100%;
+  height: 100%;
+  padding: 0em;
+  border: none;
+  text-align: center;
 }
 
 /*

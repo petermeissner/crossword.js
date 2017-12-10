@@ -291,6 +291,7 @@ crossword =
           var grid_table  = ["<table class='puzzle_grid'>"];
           var cell_class  = ""; 
           var number_attr = "";
+          var cell_input  = ""; 
 
           // - cycle through rows and add table rows and elements
           for (var i = 1; i <= puzzle_dimensions.rows; ++i) {
@@ -323,6 +324,13 @@ crossword =
                   start_attr = "";
                 }
                 
+                // 
+                if ( puzzle_grid.get_cell(x, i).directions.size == 0 ) {
+                  cell_input = ''
+                }else{
+                  cell_input = '<input class="puzzle_input" maxlength="1" val="" type="text"/>'
+                }
+
                 // push cells
                 grid_table.push(
                   '<td ' + 
@@ -330,7 +338,9 @@ crossword =
                     cell_class + " " + 
                     number_attr + " " +
                     start_attr + 
-                  '">'+ puzzle_grid.get_cell(x, i).letter.toUpperCase() +'</td>'
+                  '">'+ 
+                    cell_input +
+                  '</td>'
                 );
 
               };
@@ -395,16 +405,14 @@ crossword =
         
         // add crossword to DOM element
         cw_html =  
-          $.parseXML(
-            '<div class = "crossword_wrapper" id = "' + id + '">' + 
+            '<div class = "crossword_main_wrapper" id = "' + id + '">' + 
               '    <div class = "crossword_wrapper puzzle_wrapper"></div>' + 
               '    <div class = "crossword_wrapper across_wrapper"></div>' + 
               '    <div class = "crossword_wrapper down_wrapper"></div>' + 
-            '</div>'
-          );
+            '</div>';
         
         // write basic structure to DOM
-        $(el).append(cw_html.documentElement);
+        $(el).append(cw_html);
         
         // add grid table to puzzle wrapper
         $("#" + id + " .puzzle_wrapper")
@@ -420,6 +428,34 @@ crossword =
         $("#" + id + " .down_wrapper")
         .append(
           crossword.cw_helper.build_question_list(crossword.example_data, "down")
+        );
+
+        $("input").focusin(
+          function(){
+            var cell = $(this).parent();
+            cell.addClass("active");
+
+            console.log(cell.attr("data-coords"));
+            
+            numbers = cell.attr("number").split(",");
+            for( i = 0; i < numbers.length; i++){
+              $( "li[number=" + numbers[i] + "]" ).addClass("active");
+            }
+          }
+        );
+        
+        $("input").focusout(
+          function(){
+            var cell = $(this).parent();
+            cell.removeClass("active");
+
+            console.log(cell.attr("data-coords"));
+            
+            numbers = cell.attr("number").split(",");
+            for( i = 0; i < numbers.length; i++){
+              $( "li[number=" + numbers[i] + "]" ).removeClass("active");
+            }
+          }
         );
       }
 
