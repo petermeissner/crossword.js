@@ -1,0 +1,8 @@
+- ~~lists need data enumeration~~
+- ~~inputs need data enumeration~~
+- ~~start fields need enumeration~~
+- crossword needs a check function
+    - check letter 
+    - check word
+    - check crossword
+- arrow key should allow for navigation

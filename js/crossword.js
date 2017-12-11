@@ -229,7 +229,7 @@ crossword =
           var word_orientation = puzzle_data[i].orientation;
           var xk               = x;
           var yk               = y;
-          var number           = puzzle_data[i].number;
+          var number           = [puzzle_data[i].orientation[0], puzzle_data[i].number].join("");
           
           // mark start
           puzzle_grid_data[yk][xk].start = true; 
@@ -311,10 +311,11 @@ crossword =
                 }
                 
                 // prepare number attribute
-                if ( Array.from( puzzle_grid.get_cell(x,i).number ).length == 0 ){
-                  number_attr = "";
-                }else{
-                  number_attr = "number='" + Array.from(puzzle_grid.get_cell(x, i).number).join(",") + "'";
+                numbers = Array.from( puzzle_grid.get_cell(x,i).number );
+                directions = Array.from( puzzle_grid.get_cell(x, i).directions );
+                number_attr = [""];
+                for(d=0; d < numbers.length; d++){
+                  number_attr.push("number_" + directions[d] + "='" + numbers[d] + "'");
                 }
 
                 // prepare start attribute
@@ -326,9 +327,12 @@ crossword =
                 
                 // 
                 if ( puzzle_grid.get_cell(x, i).directions.size == 0 ) {
-                  cell_input = ''
+                  cell_input = '';
                 }else{
-                  cell_input = '<input class="puzzle_input" maxlength="1" val="" type="text"/>'
+                  cell_input = 
+                    '<input class="puzzle_input" maxlength="1" val="" type="text" id="' + 
+                    "pid_" + x + "_" + i + "" + 
+                    '"/>';
                 }
 
                 // push cells
@@ -336,7 +340,7 @@ crossword =
                   '<td ' + 
                     'data-coords="' + x + ',' + i + '" ' + 
                     cell_class + " " + 
-                    number_attr + " " +
+                    number_attr.join(" ") + " " +
                     start_attr + 
                   '">'+ 
                     cell_input +
@@ -367,13 +371,13 @@ crossword =
         puzzle_data = crossword.cw_helper.enmumerate_puzzle_data(puzzle_data);  
 
         // build up list 
-        var across_list = ["<ul class='question_list "+ direction +"'>"] ;
+        var question_list = ["<ul class='question_list "+ direction +"'>"] ;
 
         for ( i = 0; i < puzzle_data.length; i++ ) {
           if( puzzle_data[i].orientation === direction ){
-            across_list.push(
+            question_list.push(
               "<li " +
-                "number='" + puzzle_data[i].number + "'" +
+                "number_" + direction + "='" + direction[0] + puzzle_data[i].number + "'" +
                 "data-coords='" + 
                   puzzle_data[i].x + "," + 
                   puzzle_data[i].y + 
@@ -386,10 +390,10 @@ crossword =
           }
         }
 
-        across_list.push("</ol>");
+        question_list.push("</ol>");
 
         // return
-        return across_list.join('');
+        return question_list.join('');
       }
 
 
@@ -430,31 +434,65 @@ crossword =
           crossword.cw_helper.build_question_list(crossword.example_data, "down")
         );
 
-        $("input").focusin(
+        $("input.puzzle_input").focusin(
           function(){
             var cell = $(this).parent();
-            cell.addClass("active");
 
-            console.log(cell.attr("data-coords"));
-            
-            numbers = cell.attr("number").split(",");
-            for( i = 0; i < numbers.length; i++){
-              $( "li[number=" + numbers[i] + "]" ).addClass("active");
-            }
+            cell.addClass("active");
+            number_down   = cell.attr("number_down");
+            number_across = cell.attr("number_across");
+
+            console.log(number_down + ", " + number_across);
+
+            $( "li[number_down="   + number_down   + "]" ).addClass("active");
+            $( "li[number_across=" + number_across + "]" ).addClass("active");
+            $( "td[number_down="   + number_down   + "]" ).addClass("active");
+            $( "td[number_across=" + number_across + "]" ).addClass("active");
           }
         );
         
-        $("input").focusout(
+        $("input.puzzle_input").focusout(
           function(){
             var cell = $(this).parent();
             cell.removeClass("active");
-
-            console.log(cell.attr("data-coords"));
             
-            numbers = cell.attr("number").split(",");
-            for( i = 0; i < numbers.length; i++){
-              $( "li[number=" + numbers[i] + "]" ).removeClass("active");
-            }
+            number_down   = cell.attr("number_down");
+            number_across = cell.attr("number_across");
+
+            $( "li[number_down="   + number_down + "]" ).removeClass("active");
+            $( "li[number_across=" + number_across + "]" ).removeClass("active");
+            $( "td[number_down="   + number_down + "]" ).removeClass("active");
+            $( "td[number_across=" + number_across + "]" ).removeClass("active");
+          }
+        );
+
+        $("ul.question_list > li[number_down]").hover(
+          function(){
+            var cell = $(this);
+            var number_down = cell.attr("number_down");
+            cell.addClass("active");
+            $( "td[number_down="   + number_down + "]" ).addClass("active");
+          },
+          function(){
+            var cell = $(this);
+            var number_down = cell.attr("number_down");
+            cell.removeClass("active");
+            $( "td[number_down="   + number_down + "]" ).removeClass("active");
+          }
+        );
+
+        $("ul.question_list > li[number_across]").hover(
+          function(){
+            var cell = $(this);
+            var number_across = cell.attr("number_across");
+            cell.addClass("active");
+            $( "td[number_across="   + number_across + "]" ).addClass("active");
+          },
+          function(){
+            var cell = $(this);
+            var number_across = cell.attr("number_across");
+            cell.removeClass("active");
+            $( "td[number_across="   + number_across + "]" ).removeClass("active");
           }
         );
       }
