@@ -7,6 +7,16 @@ body {
   font-weight: bold;
 }
 
+.active_input {
+  color:steelblue;
+  font-weight: bold;
+}
+
+.active_hover {
+  color:steelblue;
+  font-weight: bold;
+}
+
 .puzzle_wrapper {
   text-align: -webkit-center;
   margin: 5px;
@@ -37,6 +47,14 @@ table.puzzle_grid tr, th, td {
 
 td.active {
   background-color: rgba(173, 217, 230, 0.534);
+}
+
+td.active_hover {
+  background-color: rgba(173, 226, 230, 0.459);
+}
+
+td.active_input {
+  background-color: rgba(173, 198, 230, 0.596);
 }
 
 .puzzle_grid td.empty {

@@ -494,29 +494,29 @@ crossword =
           function(){
             var cell = $(this).parent();
 
-            cell.addClass("active");
+            cell.addClass("active_input");
             number_down   = cell.attr("number_down");
             number_across = cell.attr("number_across");
 
-            $( "li[number_down="   + number_down   + "]" ).addClass("active");
-            $( "li[number_across=" + number_across + "]" ).addClass("active");
-            $( "td[number_down="   + number_down   + "]" ).addClass("active");
-            $( "td[number_across=" + number_across + "]" ).addClass("active");
+            $( "li[number_down="   + number_down   + "]" ).addClass("active_input");
+            $( "li[number_across=" + number_across + "]" ).addClass("active_input");
+            $( "td[number_down="   + number_down   + "]" ).addClass("active_input");
+            $( "td[number_across=" + number_across + "]" ).addClass("active_input");
           }
         );
         
         $("input.puzzle_input").focusout(
           function(){
             var cell = $(this).parent();
-            cell.removeClass("active");
+            cell.removeClass("active_input");
             
             number_down   = cell.attr("number_down");
             number_across = cell.attr("number_across");
 
-            $( "li[number_down="   + number_down + "]" ).removeClass("active");
-            $( "li[number_across=" + number_across + "]" ).removeClass("active");
-            $( "td[number_down="   + number_down + "]" ).removeClass("active");
-            $( "td[number_across=" + number_across + "]" ).removeClass("active");
+            $( "li[number_down="   + number_down + "]" ).removeClass("active_input");
+            $( "li[number_across=" + number_across + "]" ).removeClass("active_input");
+            $( "td[number_down="   + number_down + "]" ).removeClass("active_input");
+            $( "td[number_across=" + number_across + "]" ).removeClass("active_input");
           }
         );
 
@@ -524,14 +524,14 @@ crossword =
           function(){
             var cell = $(this);
             var number_down = cell.attr("number_down");
-            cell.addClass("active");
-            $( "td[number_down="   + number_down + "]" ).addClass("active");
+            cell.addClass("active_hover");
+            $( "td[number_down="   + number_down + "]" ).addClass("active_hover");
           },
           function(){
             var cell = $(this);
             var number_down = cell.attr("number_down");
-            cell.removeClass("active");
-            $( "td[number_down="   + number_down + "]" ).removeClass("active");
+            cell.removeClass("active_hover");
+            $( "td[number_down="   + number_down + "]" ).removeClass("active_hover");
           }
         );
 
@@ -539,14 +539,25 @@ crossword =
           function(){
             var cell = $(this);
             var number_across = cell.attr("number_across");
-            cell.addClass("active");
-            $( "td[number_across="   + number_across + "]" ).addClass("active");
+            cell.addClass("active_hover");
+            $( "td[number_across="   + number_across + "]" ).addClass("active_hover");
           },
           function(){
             var cell = $(this);
             var number_across = cell.attr("number_across");
-            cell.removeClass("active");
-            $( "td[number_across="   + number_across + "]" ).removeClass("active");
+            cell.removeClass("active_hover");
+            $( "td[number_across="   + number_across + "]" ).removeClass("active_hover");
+          }
+        );
+
+        $("ul.question_list > li").click(
+          function(){
+            coords = this.getAttribute("data-coords").split(",");
+            $(
+              "#pid"    + "_" +
+              coords[1] + "_" +
+              coords[0]
+            )[0].focus();
           }
         );
 
@@ -573,10 +584,9 @@ crossword =
 
             // filter for coordinate for current line / 
             var x_coords = new crossword.tools.Ring(puzzle_inputs_x);
-
             var y_coords = new crossword.tools.Ring(puzzle_inputs_y);
 
-            // DEV - fill out the rest 
+            // jump to next input depending on key pressed
             if( event.which === 38 ){ // up
               $("#pid_" + x + "_" + y_coords.prev_to(y)).focus()
             }else if( event.which === 40 ){ // down 
