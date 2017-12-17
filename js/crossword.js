@@ -66,6 +66,60 @@ crossword =
         return false;
       };
 
+      crossword.tools.Ring = function(items = []){
+        
+          // items
+          this.items = Array.from(items);
+
+          // pointer to current item 
+          this.pointer = 0;
+          
+          // get next item / item next to value
+          this.next_to = function(val){
+            // if no value supplied simply take next 
+            if( val === undefined ){
+              this.pointer = (this.pointer + 1) % items.length;
+            }else{
+              // look up value and set pointer to next element
+              new_pointer = 
+                this.items.findIndex(
+                  function(el){
+                    return el === val;
+                  }
+                );
+        
+              if( new_pointer !== -1 ){
+                this.pointer = (new_pointer + 1) % items.length;
+              }
+            }
+            
+            return items[this.pointer];
+          };
+          
+          // get previous item / item previous to value
+          this.prev_to = function(val){
+            // if no value supplied simply take previous
+            if( val === undefined ){
+              this.pointer = (this.pointer + items.length - 1) % items.length ;
+            }else{
+              // look up value and set pointer to previous element
+              new_pointer = 
+                this.items.findIndex(
+                  function(el){
+                    return el === val;
+                  }
+                )
+        
+                if( new_pointer !== -1 ){
+                  this.pointer = (new_pointer + items.length - 1) % items.length ;
+                }
+            }
+        
+            return items[this.pointer];
+          }
+        };
+        
+
 
       // ---- cw_helper -------------------------------------------------------
 
@@ -331,8 +385,10 @@ crossword =
                 }else{
                   cell_input = 
                     '<input class="puzzle_input" maxlength="1" val="" type="text" id="' + 
-                    "pid_" + x + "_" + i + "" + 
-                    '"/>';
+                    "pid_" + x + "_" + i + '" ' + 
+                    'x="' + x + '" ' + 
+                    'y="' + i + '" ' + 
+                    '/>';
                 }
 
                 // push cells
@@ -442,8 +498,6 @@ crossword =
             number_down   = cell.attr("number_down");
             number_across = cell.attr("number_across");
 
-            console.log(number_down + ", " + number_across);
-
             $( "li[number_down="   + number_down   + "]" ).addClass("active");
             $( "li[number_across=" + number_across + "]" ).addClass("active");
             $( "td[number_down="   + number_down   + "]" ).addClass("active");
@@ -495,11 +549,53 @@ crossword =
             $( "td[number_across="   + number_across + "]" ).removeClass("active");
           }
         );
+
+        $(".puzzle_input").keydown(
+          function( event ) {
+            var id_parts = this.id.split("_");
+            var x = Number(id_parts[1]);
+            var y = Number(id_parts[2]);
+
+            // get available x coordinates for curent input
+            var puzzle_inputs_x = 
+              $("#" + id + " .puzzle_input[y='" + y + "']").map(
+                function(){ return Number(this.attributes.x.value); } 
+              )
+              .sort( function(a, b){ return (a - b); } );
+            
+            // get available y coordinates for curent input
+            var puzzle_inputs_y = 
+              $("#" + id + " .puzzle_input[x='" + x + "']").map(
+                function(){ return Number(this.attributes.y.value); } 
+              )
+              .sort( function(a, b){ return (a - b); } );
+
+
+            // filter for coordinate for current line / 
+            var x_coords = new crossword.tools.Ring(puzzle_inputs_x);
+
+            var y_coords = new crossword.tools.Ring(puzzle_inputs_y);
+
+            // DEV - fill out the rest 
+            if( event.which === 38 ){ // up
+              $("#pid_" + x + "_" + y_coords.prev_to(y)).focus()
+            }else if( event.which === 40 ){ // down 
+              $("#pid_" + x + "_" + y_coords.next_to(y)).focus()
+            }else if( event.which === 39 ){ // right
+              $("#pid_" + x_coords.next_to(x) + "_" + y).focus()
+            }else if( event.which === 37 ){ // left
+              $("#pid_" + x_coords.prev_to(x) + "_" + y).focus()
+            }
+            
+            window.e = this;
+          }
+        );
       }
 
       // return crossword module 
       return crossword;
     }
   )();
+
 
 
