@@ -3,7 +3,7 @@ crossword =
     function() {
       // ---- Description -----------------------------------------------------
       
-      // * this function returns an object which will stores the crossword module
+      // * this function returns an object which will store the crossword module
       //
       // * the module consists of 
       //   - tools - functions to solve general JS problems 
@@ -20,12 +20,30 @@ crossword =
       var crossword = {};
       crossword.tools     = {};
       crossword.cw_helper = {};
-      crossword.example_data = [{"clue":"First letter of greek alphabet","answer":"alpha","orientation":"across","x":1,"y":1},{"clue":"Not a one ___ motor, but a three ___ motor","answer":"phase","orientation":"across","x":7,"y":1},{"clue":"Created from a separation of charge","answer":"capacitance","orientation":"across","x":1,"y":3},{"clue":"The speeds of engines without and accelaration","answer":"idlespeeds","orientation":"across","x":1,"y":5},{"clue":"Complex resistances","answer":"impedances","orientation":"across","x":2,"y":7},{"clue":"This device is used to step-up, step-down, and/or isolate","answer":"transformer","orientation":"across","x":1,"y":9},{"clue":"Type of ray emitted frm the sun","answer":"gamma","orientation":"across","x":1,"y":11},{"clue":"C programming language operator","answer":"cysan","orientation":"across","x":7,"y":11},{"clue":"Defines the alpha-numeric characters that are typically associated with text used in programming","answer":"ascii","orientation":"down","x":1,"y":1},{"clue":"Generally, if you go over 1kV per cm this happens","answer":"arc","orientation":"down","x":5,"y":1},{"clue":"Control system strategy that tries to replicate the human through process (abbr.)","answer":"ann","orientation":"down","x":9,"y":1},{"clue":"Greek variable that usually describes rotor positon","answer":"theta","orientation":"down","x":7,"y":3},{"clue":"Electromagnetic (abbr.)","answer":"em","orientation":"down","x":11,"y":3},{"clue":"No. 13 across does this to a voltage","answer":"steps","orientation":"down","x":5,"y":5},{"clue":"Emits a lout wailing sound","answer":"siren","orientation":"down","x":11,"y":7},{"clue":"Information technology (abbr.)","answer":"it","orientation":"down","x":1,"y":8},{"clue":"Asynchronous transfer mode (abbr.)","answer":"atm","orientation":"down","x":3,"y":9},{"clue":"Offset current control (abbr.)","answer":"occ","orientation":"down","x":7,"y":9}];
+      crossword.crosswords = {};
+      crossword.example_puzzle_data = 
+      [
+        {"clue":"First letter of greek alphabet","answer":"alpha","orientation":"across","x":1,"y":1},
+        {"clue":"Not a one ___ motor, but a three ___ motor","answer":"phase","orientation":"across","x":7,"y":1},
+        {"clue":"Created from a separation of charge","answer":"capacitance","orientation":"across","x":1,"y":3},
+        {"clue":"The speeds of engines without and accelaration","answer":"idlespeeds","orientation":"across","x":1,"y":5},
+        {"clue":"Complex resistances","answer":"impedances","orientation":"across","x":2,"y":7},
+        {"clue":"This device is used to step-up, step-down, and/or isolate","answer":"transformer","orientation":"across","x":1,"y":9},
+        {"clue":"Type of ray emitted frm the sun","answer":"gamma","orientation":"across","x":1,"y":11},
+        {"clue":"C programming language operator","answer":"cysan","orientation":"across","x":7,"y":11},
+        {"clue":"Defines the alpha-numeric characters that are typically associated with text used in programming","answer":"ascii","orientation":"down","x":1,"y":1},
+        {"clue":"Generally, if you go over 1kV per cm this happens","answer":"arc","orientation":"down","x":5,"y":1},
+        {"clue":"Control system strategy that tries to replicate the human through process (abbr.)","answer":"ann","orientation":"down","x":9,"y":1},
+        {"clue":"Greek variable that usually describes rotor positon","answer":"theta","orientation":"down","x":7,"y":3},
+        {"clue":"Electromagnetic (abbr.)","answer":"em","orientation":"down","x":11,"y":3},
+        {"clue":"No. 13 across does this to a voltage","answer":"steps","orientation":"down","x":5,"y":5},
+        {"clue":"Emits a lout wailing sound","answer":"siren","orientation":"down","x":11,"y":7},
+        {"clue":"Information technology (abbr.)","answer":"it","orientation":"down","x":1,"y":8},
+        {"clue":"Asynchronous transfer mode (abbr.)","answer":"atm","orientation":"down","x":3,"y":9},
+        {"clue":"Offset current control (abbr.)","answer":"occ","orientation":"down","x":7,"y":9}
+      ];
       
-      // DEV - use example data for now
-      var puzzle_data = crossword.example_data;
-
-
+      
       // ---- tools ----------------------------------------------------------
       
       // - check that arrays contain same values (no matter the order)
@@ -458,7 +476,7 @@ crossword =
       // ---- crossword API ---------------------------------------------------
 
       // - adding crossword to element
-      crossword.append_to_element = function(el, id) {
+      crossword.new_crossword = function(el, id, puzzle_data, difficulty = 1) {
 
         // check puzzle data consistency
         crossword.cw_helper.check_puzzle_data(puzzle_data = puzzle_data); 
@@ -477,17 +495,17 @@ crossword =
         // add grid table to puzzle wrapper
         $("#" + id + " .puzzle_wrapper")
           .append(
-            crossword.cw_helper.build_grid_table(crossword.example_data)
+            crossword.cw_helper.build_grid_table(puzzle_data)
           );
 
         $("#" + id + " .across_wrapper")
           .append(
-            crossword.cw_helper.build_question_list(crossword.example_data, "across")
+            crossword.cw_helper.build_question_list(puzzle_data, "across")
           );
 
         $("#" + id + " .down_wrapper")
         .append(
-          crossword.cw_helper.build_question_list(crossword.example_data, "down")
+          crossword.cw_helper.build_question_list(puzzle_data, "down")
         );
 
         $("input.puzzle_input").focusin(
@@ -588,18 +606,25 @@ crossword =
 
             // jump to next input depending on key pressed
             if( event.which === 38 ){ // up
-              $("#pid_" + x + "_" + y_coords.prev_to(y)).focus()
+              $("#pid_" + x + "_" + y_coords.prev_to(y)).focus();
             }else if( event.which === 40 ){ // down 
-              $("#pid_" + x + "_" + y_coords.next_to(y)).focus()
+              $("#pid_" + x + "_" + y_coords.next_to(y)).focus();
             }else if( event.which === 39 ){ // right
-              $("#pid_" + x_coords.next_to(x) + "_" + y).focus()
+              $("#pid_" + x_coords.next_to(x) + "_" + y).focus();
             }else if( event.which === 37 ){ // left
-              $("#pid_" + x_coords.prev_to(x) + "_" + y).focus()
+              $("#pid_" + x_coords.prev_to(x) + "_" + y).focus();
             }
             
             window.e = this;
           }
         );
+
+        crossword.crosswords[id] = {
+          "check": function(){
+            console.log("wohooo");
+            console.log(puzzle_data.length);
+          }
+        }
       }
 
       // return crossword module 

@@ -5,4 +5,4 @@
     - check letter 
     - check word
     - check crossword
-- arrow key should allow for navigation
+- ~~arrow key should allow for navigation~~
