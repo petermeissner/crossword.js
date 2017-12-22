@@ -613,6 +613,8 @@ crossword =
               $("#pid_" + x_coords.next_to(x) + "_" + y).focus();
             }else if( event.which === 37 ){ // left
               $("#pid_" + x_coords.prev_to(x) + "_" + y).focus();
+            }else{
+             this.value = event.key;
             }
             
             window.e = this;

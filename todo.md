@@ -5,4 +5,5 @@
     - check letter 
     - check word
     - check crossword
+- ~~override input~~
 - ~~arrow key should allow for navigation~~
