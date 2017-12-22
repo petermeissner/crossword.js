@@ -605,6 +605,7 @@ crossword =
             var y_coords = new crossword.tools.Ring(puzzle_inputs_y);
 
             // jump to next input depending on key pressed
+            // or override input with new character
             if( event.which === 38 ){ // up
               $("#pid_" + x + "_" + y_coords.prev_to(y)).focus();
             }else if( event.which === 40 ){ // down 
@@ -614,8 +615,10 @@ crossword =
             }else if( event.which === 37 ){ // left
               $("#pid_" + x_coords.prev_to(x) + "_" + y).focus();
             }else{
-             this.value = event.key;
-            }
+              if ( event.key.length == 1 ){
+                this.value = event.key;
+              }
+            } 
             
             window.e = this;
           }
