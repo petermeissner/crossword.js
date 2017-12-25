@@ -3,6 +3,7 @@
 **status**
 - WIP
 - first feature complete version gets finished
+- Example: https://petermeissner.github.io/crossword.js/
 
 **features**
 - show crossword
