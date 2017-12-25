@@ -620,7 +620,6 @@ crossword =
               }
             } 
             
-            window.e = this;
           }
         );
 
