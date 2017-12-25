@@ -339,7 +339,7 @@ crossword =
 
           // check if cell entry is correct
           "check_cell": function(x, y, letter){
-            return this.get_cell(x,y).letter === letter;
+            return this.get_cell(x,y).letter.toLowerCase() === letter.toLowerCase();
           }
         };
 
@@ -476,7 +476,7 @@ crossword =
       // ---- crossword API ---------------------------------------------------
 
       // - adding crossword to element
-      crossword.new_crossword = function(el, id, puzzle_data, difficulty = 1) {
+      crossword.new_crossword = function(el, id, puzzle_data, checker = "character") {
 
         // check puzzle data consistency
         crossword.cw_helper.check_puzzle_data(puzzle_data = puzzle_data); 
@@ -619,16 +619,48 @@ crossword =
                 this.value = event.key;
               }
             } 
-            
+
           }
         );
 
-        crossword.crosswords[id] = {
-          "check": function(){
-            console.log("wohooo");
-            console.log(puzzle_data.length);
+        $(".puzzle_input").keyup(
+          function( event ) {
+            var id_parts = this.id.split("_");
+            var x = Number(id_parts[1]);
+            var y = Number(id_parts[2]);
+            var letter = this.value;
+
+            if ( crossword.crosswords[id].check(x = x, y = y, letter) ){
+              this.classList.add("solved");
+              this.parentElement.classList.add("solved");
+            }else{
+              this.parentElement.classList.remove("solved")
+              this.classList.remove("solved")
+            }
           }
+        )
+
+        // add checker for crossword
+        puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
+        crossword.crosswords[id] = {};
+
+        if ( checker === "character" ){
+          crossword.crosswords[id].check = 
+            function(x,y, letter){
+              return puzzle_grid.check_cell(x,y, letter);
+            }
+        }else if ( checker === "word" ) {
+          crossword.crosswords[id].check = 
+            function(){
+
+            }
+        }else if ( checker === "puzzle" ){
+          crossword.crosswords[id].check = 
+            function(){
+
+            }
         }
+        
       }
 
       // return crossword module 

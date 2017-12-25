@@ -14,7 +14,12 @@
 
 <body>
   <script>
-    crossword.new_crossword("body", "cw_id_001", cw_01);
+    crossword.new_crossword(
+      el          = "body", 
+      id          = "cw_id_001", 
+      puzzle_data = cw_01, 
+      checker     = "character"
+    );
   </script>
 </body>
 
