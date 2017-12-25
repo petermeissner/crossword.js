@@ -1,9 +1,7 @@
 # crossword.js - Javascript module to visualize crosswords. 
 
-A complete - from scratch - rewrite of the Jweisbeck Crossword https://github.com/jweisbeck/Crossword 
-
 **status**
-
+- WIP
 - first feature complete version gets finished
 
 **features**
