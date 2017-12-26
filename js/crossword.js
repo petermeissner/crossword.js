@@ -126,7 +126,7 @@ crossword =
                   function(el){
                     return el === val;
                   }
-                )
+                );
         
                 if( new_pointer !== -1 ){
                   this.pointer = (new_pointer + items.length - 1) % items.length ;
@@ -134,7 +134,7 @@ crossword =
             }
         
             return items[this.pointer];
-          }
+          };
         };
         
 
@@ -174,7 +174,7 @@ crossword =
               return 0;
             }
           }
-        )
+        );
 
         return puzzle_data;
       };
@@ -334,7 +334,7 @@ crossword =
             // filter elements according to coordinates
             var cell = this.data[x - 1][y - 1];
             // return
-            return cell  
+            return cell;
           },
 
           // check if cell entry is correct
@@ -345,7 +345,7 @@ crossword =
 
         // return grid 
         return puzzle_grid;
-      } 
+      };
 
 
       // - building grid table
@@ -421,15 +421,15 @@ crossword =
                   '</td>'
                 );
 
-              };
+              }
             
               // - end of row
             grid_table.push("</tr>");
 
-          };
+          }
 
           // end of table
-          grid_table.push("</table>")
+          grid_table.push("</table>");
           
         // return 
         return grid_table.join('');
@@ -460,7 +460,7 @@ crossword =
                 "(" + puzzle_data[i].number + ") " +
                 puzzle_data[i].clue + 
               "</li>"
-            )
+            );
           }
         }
 
@@ -468,7 +468,7 @@ crossword =
 
         // return
         return question_list.join('');
-      }
+      };
 
 
 
@@ -634,11 +634,11 @@ crossword =
               this.classList.add("solved");
               this.parentElement.classList.add("solved");
             }else{
-              this.parentElement.classList.remove("solved")
-              this.classList.remove("solved")
+              this.parentElement.classList.remove("solved");
+              this.classList.remove("solved");
             }
           }
-        )
+        );
 
         // add checker for crossword
         puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
@@ -648,20 +648,20 @@ crossword =
           crossword.crosswords[id].check = 
             function(x,y, letter){
               return puzzle_grid.check_cell(x,y, letter);
-            }
+            };
         }else if ( checker === "word" ) {
           crossword.crosswords[id].check = 
             function(){
 
-            }
+            };
         }else if ( checker === "puzzle" ){
           crossword.crosswords[id].check = 
             function(){
 
-            }
+            };
         }
         
-      }
+      };
 
       // return crossword module 
       return crossword;
