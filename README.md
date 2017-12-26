@@ -1,30 +1,22 @@
 # crossword.js - Javascript module to visualize crosswords. 
 
-A complete - from scratch - rewrite of the Jweisbeck Crossword https://github.com/jweisbeck/Crossword 
-
 **status**
-
-- Visualization part done
-- Checking parts needs to be implemented
-- some UX features are still missing: default to overwrite on inputs
+- WIP
+- first feature complete version gets finished
+- Example: https://petermeissner.github.io/crossword.js/
 
 **features**
 - show crossword
 - show clues / questions
 - interactively solve crossword
+- crossword checking and visualization
 
 
 **todos**
 
-- ~~lists need data enumeration~~
-- ~~inputs need data enumeration~~
-- ~~start fields need enumeration~~
-- ~~override input~~
-- ~~arrow key should allow for navigation~~
-
 - crossword needs a check function
-    - !define if checker is needed when creating crossword! (good when later on handling cw data and checking from server backend)
-        - check letter 
+    - ~~!define if checker is needed when creating crossword! (good when later on handling cw data and checking from server backend)~~
+        - ~~check letter~~
         - check word
         - check crossword
 
