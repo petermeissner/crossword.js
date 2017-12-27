@@ -22,26 +22,25 @@ crossword =
       crossword.cw_helper = {};
       crossword.crosswords = {};
       crossword.example_puzzle_data = 
-      [
-        {"clue":"First letter of greek alphabet","answer":"alpha","orientation":"across","x":1,"y":1},
-        {"clue":"Not a one ___ motor, but a three ___ motor","answer":"phase","orientation":"across","x":7,"y":1},
-        {"clue":"Created from a separation of charge","answer":"capacitance","orientation":"across","x":1,"y":3},
-        {"clue":"The speeds of engines without and accelaration","answer":"idlespeeds","orientation":"across","x":1,"y":5},
-        {"clue":"Complex resistances","answer":"impedances","orientation":"across","x":2,"y":7},
-        {"clue":"This device is used to step-up, step-down, and/or isolate","answer":"transformer","orientation":"across","x":1,"y":9},
-        {"clue":"Type of ray emitted frm the sun","answer":"gamma","orientation":"across","x":1,"y":11},
-        {"clue":"C programming language operator","answer":"cysan","orientation":"across","x":7,"y":11},
-        {"clue":"Defines the alpha-numeric characters that are typically associated with text used in programming","answer":"ascii","orientation":"down","x":1,"y":1},
-        {"clue":"Generally, if you go over 1kV per cm this happens","answer":"arc","orientation":"down","x":5,"y":1},
-        {"clue":"Control system strategy that tries to replicate the human through process (abbr.)","answer":"ann","orientation":"down","x":9,"y":1},
-        {"clue":"Greek variable that usually describes rotor positon","answer":"theta","orientation":"down","x":7,"y":3},
-        {"clue":"Electromagnetic (abbr.)","answer":"em","orientation":"down","x":11,"y":3},
-        {"clue":"No. 13 across does this to a voltage","answer":"steps","orientation":"down","x":5,"y":5},
-        {"clue":"Emits a lout wailing sound","answer":"siren","orientation":"down","x":11,"y":7},
-        {"clue":"Information technology (abbr.)","answer":"it","orientation":"down","x":1,"y":8},
-        {"clue":"Asynchronous transfer mode (abbr.)","answer":"atm","orientation":"down","x":3,"y":9},
-        {"clue":"Offset current control (abbr.)","answer":"occ","orientation":"down","x":7,"y":9}
-      ];
+        [
+          {"x": 11, "y": 1, "orientation": "down", "clue": "Elongated fish", "answer": "EEL"},
+          {"x": 1,"y": 11,"orientation": "across","clue": "Strong swimmer and jumper","answer": "SALMON"},
+          {"x": 3,"y": 4,"orientation": "down","clue": "Largest primate","answer": "GORILLA"},
+          {"x": 2,"y": 1,"orientation": "down","clue": "Eight legged","answer": "SPIDER"},
+          {"x": 3,"y": 2,"orientation": "across","clue": "Armored reptile","answer": "TORTOISE"},
+          {"x": 4,"y": 5,"orientation": "down","clue": "Medium-sized omnivorous mammal","answer": "JACKAL"},
+          {"x": 10,"y": 1,"orientation": "down","clue": "Slow but armored","answer": "SNAIL"},
+          {"x": 6,"y": 3,"orientation": "down","clue": "Australian original","answer": "KANGAROO"},
+          {"x": 4,"y": 5,"orientation": "across","clue": "Fast runner with long ears","answer": "HARE"},
+          {"x": 8,"y": 3,"orientation": "down","clue": "Living in colonies","answer": "TERMITE"},
+          {"x": 11,"y": 5,"orientation": "down","clue": "Bait fish","answer": "MINNOW"},
+          {"x": 9,"y": 5,"orientation": "down","clue": "Small, slender predator","answer": "WEASEL"},
+          {"x": 10,"y": 8,"orientation": "down","clue": "Striped but no predator","answer": "BEE"},
+          {"x": 7,"y": 3,"orientation": "down","clue": "clawed and armored sidewalker","answer": "CRAB"},
+          {"x": 5,"y": 6,"orientation": "down","clue": "Tailless humanlike primate","answer": "APE"},
+          {"x": 5,"y": 1,"orientation": "down","clue": "Castrated adult male cattle","answer": "OX"}
+        ];
+      
       
       
       // ---- tools ----------------------------------------------------------
@@ -340,6 +339,15 @@ crossword =
           // check if cell entry is correct
           "check_cell": function(x, y, letter){
             return this.get_cell(x,y).letter.toLowerCase() === letter.toLowerCase();
+          },
+
+          "get_word": function(direction, number){
+            
+          },
+
+          // check if word is correct
+          "check_word": function(number, letters){
+
           }
         };
 
@@ -476,7 +484,7 @@ crossword =
       // ---- crossword API ---------------------------------------------------
 
       // - adding crossword to element
-      crossword.new_crossword = function(el, id, puzzle_data, checker = "character") {
+      crossword.new_crossword = function(el, id, puzzle_data, checker) {
 
         // check puzzle data consistency
         crossword.cw_helper.check_puzzle_data(puzzle_data = puzzle_data); 
@@ -508,7 +516,7 @@ crossword =
           crossword.cw_helper.build_question_list(puzzle_data, "down")
         );
 
-        $("input.puzzle_input").focusin(
+        $("#" + id + " input.puzzle_input").focusin(
           function(){
             var cell = $(this).parent();
 
@@ -516,14 +524,14 @@ crossword =
             number_down   = cell.attr("number_down");
             number_across = cell.attr("number_across");
 
-            $( "li[number_down="   + number_down   + "]" ).addClass("active_input");
-            $( "li[number_across=" + number_across + "]" ).addClass("active_input");
-            $( "td[number_down="   + number_down   + "]" ).addClass("active_input");
-            $( "td[number_across=" + number_across + "]" ).addClass("active_input");
+            $("#" + id + " li[number_down="   + number_down   + "]" ).addClass("active_input");
+            $("#" + id + " li[number_across=" + number_across + "]" ).addClass("active_input");
+            $("#" + id + " td[number_down="   + number_down   + "]" ).addClass("active_input");
+            $("#" + id + " td[number_across=" + number_across + "]" ).addClass("active_input");
           }
         );
         
-        $("input.puzzle_input").focusout(
+        $("#" + id + " input.puzzle_input").focusout(
           function(){
             var cell = $(this).parent();
             cell.removeClass("active_input");
@@ -531,44 +539,44 @@ crossword =
             number_down   = cell.attr("number_down");
             number_across = cell.attr("number_across");
 
-            $( "li[number_down="   + number_down + "]" ).removeClass("active_input");
-            $( "li[number_across=" + number_across + "]" ).removeClass("active_input");
-            $( "td[number_down="   + number_down + "]" ).removeClass("active_input");
-            $( "td[number_across=" + number_across + "]" ).removeClass("active_input");
+            $("#" + id + " li[number_down="   + number_down + "]" ).removeClass("active_input");
+            $("#" + id + " li[number_across=" + number_across + "]" ).removeClass("active_input");
+            $("#" + id + " td[number_down="   + number_down + "]" ).removeClass("active_input");
+            $("#" + id + " td[number_across=" + number_across + "]" ).removeClass("active_input");
           }
         );
 
-        $("ul.question_list > li[number_down]").hover(
+        $("#" + id + " ul.question_list > li[number_down]").hover(
           function(){
             var cell = $(this);
             var number_down = cell.attr("number_down");
             cell.addClass("active_hover");
-            $( "td[number_down="   + number_down + "]" ).addClass("active_hover");
+            $("#" + id + " td[number_down="   + number_down + "]" ).addClass("active_hover");
           },
           function(){
             var cell = $(this);
             var number_down = cell.attr("number_down");
             cell.removeClass("active_hover");
-            $( "td[number_down="   + number_down + "]" ).removeClass("active_hover");
+            $("#" + id +  " td[number_down="   + number_down + "]" ).removeClass("active_hover");
           }
         );
 
-        $("ul.question_list > li[number_across]").hover(
+        $("#" + id + " ul.question_list > li[number_across]").hover(
           function(){
             var cell = $(this);
             var number_across = cell.attr("number_across");
             cell.addClass("active_hover");
-            $( "td[number_across="   + number_across + "]" ).addClass("active_hover");
+            $("#" + id + " td[number_across="   + number_across + "]" ).addClass("active_hover");
           },
           function(){
             var cell = $(this);
             var number_across = cell.attr("number_across");
             cell.removeClass("active_hover");
-            $( "td[number_across="   + number_across + "]" ).removeClass("active_hover");
+            $("#" + id + " td[number_across="   + number_across + "]" ).removeClass("active_hover");
           }
         );
 
-        $("ul.question_list > li").click(
+        $("#" + id + " ul.question_list > li").click(
           function(){
             coords = this.getAttribute("data-coords").split(",");
             $(
@@ -579,7 +587,7 @@ crossword =
           }
         );
 
-        $(".puzzle_input").keydown(
+        $("#" + id + " .puzzle_input").keydown(
           function( event ) {
             var id_parts = this.id.split("_");
             var x = Number(id_parts[1]);
@@ -609,9 +617,9 @@ crossword =
             if( event.which === 38 ){ // up
               $("#" + id + " #pid_" + x + "_" + y_coords.prev_to(y)).focus();
             }else if( event.which === 40 ){ // down 
-              $("#pid_" + x + "_" + y_coords.next_to(y)).focus();
+              $("#" + id + " #pid_" + x + "_" + y_coords.next_to(y)).focus();
             }else if( event.which === 39 ){ // right
-              $("#pid_" + x_coords.next_to(x) + "_" + y).focus();
+              $("#" + id + " #pid_" + x_coords.next_to(x) + "_" + y).focus();
             }else if( event.which === 37 ){ // left
               $("#" + id + " #pid_" + x_coords.prev_to(x) + "_" + y).focus();
             }else{
@@ -623,7 +631,7 @@ crossword =
           }
         );
 
-        $(".puzzle_input").keyup(
+        $("#" + id + " .puzzle_input").keyup(
           function( event ) {
             var id_parts = this.id.split("_");
             var x = Number(id_parts[1]);
@@ -642,22 +650,38 @@ crossword =
 
         // add checker for crossword
         puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
-        crossword.crosswords[id] = {};
+        crossword.crosswords[id] = 
+        {
+          "id": id,
+          "get_current_grid": function(){
+            return $("#" + this.id + " .puzzle_input");
+          }
+        };
 
-        if ( checker === "character" ){
+        crossword.crosswords[id].get_current_grid = 
+          function(){
+            $();
+          };
+
+        if ( checker === "character" | checker === 1 | checker === "letter"){
           crossword.crosswords[id].check = 
             function(x,y, letter){
               return puzzle_grid.check_cell(x,y, letter);
             };
-        }else if ( checker === "word" ) {
+        }else if ( checker === "word" | checker === 2) {
           crossword.crosswords[id].check = 
-            function(){
+            function(number, letters){
+              
+            };
+        }else if ( checker === "grid" | checker === 3){
+          crossword.crosswords[id].check = 
+            function(current_grid){
 
             };
-        }else if ( checker === "puzzle" ){
+        }else{
           crossword.crosswords[id].check = 
             function(){
-
+              return false;  
             };
         }
         
