@@ -14,6 +14,8 @@
 
 **todos**
 
+- get example right (index.html)
+
 - crossword needs a check function
     - ~~!define if checker is needed when creating crossword! (good when later on handling cw data and checking from server backend)~~
         - ~~check letter~~

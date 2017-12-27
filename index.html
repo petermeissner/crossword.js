@@ -9,16 +9,36 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <!--<script src="js/jquery.crossword.js"></script>-->
     <script src="js/crossword.js"></script>
-    <script src="js/script.js"></script>
 </head>
 
 <body>
+  <h1>Crossword with letter based checker</h1>
+    <p id="cw1"></p>
+
+  <h1>Crossword with word based checker</h1>
+    <p id="cw2"></p>
+
+  <h1>Crossword with whole grid checker</h1>
+    <p id="cw3"></p>
+
   <script>
     crossword.new_crossword(
-      el          = "body", 
+      el          = "#cw1", 
       id          = "cw_id_001", 
-      puzzle_data = cw_01, 
+      puzzle_data = crossword.example_puzzle_data, 
       checker     = "character"
+    );
+    crossword.new_crossword(
+      el          = "#cw2", 
+      id          = "cw_id_002", 
+      puzzle_data = crossword.example_puzzle_data, 
+      checker     = "word"
+    );
+    crossword.new_crossword(
+      el          = "#cw3",
+      id          = "cw_id_003", 
+      puzzle_data = crossword.example_puzzle_data, 
+      checker     = "grid"
     );
   </script>
 </body>
