@@ -648,21 +648,39 @@ crossword =
           }
         );
 
-        // add checker for crossword
-        puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
+        
+        // add data and functions to crossword module per crossword instance 
+        var puzzle_grid = crossword.cw_helper.build_grid(puzzle_data);
         crossword.crosswords[id] = 
         {
           "id": id,
           "get_current_grid": function(){
-            return $("#" + this.id + " .puzzle_input");
+            // retrieve relevant data from inputs 
+            var grid = 
+              $("#" + this.id + " .puzzle_input").map(
+                function(){
+                  return {
+                    "x":   Number(this.getAttribute("x")),
+                    "y":   Number(this.getAttribute("y")),
+                    "val": this.value
+                  };
+                }
+              ).sort(
+              function(a,b){
+                if( a.y === b.y ){
+                  return (a.x - b.x);
+                }else{
+                  return (a.y - b.y);
+                }
+              }
+            );
+
+            // return
+            return grid;
           }
         };
 
-        crossword.crosswords[id].get_current_grid = 
-          function(){
-            $();
-          };
-
+        // add checker for crossword
         if ( checker === "character" | checker === 1 | checker === "letter"){
           crossword.crosswords[id].check = 
             function(x,y, letter){
@@ -671,12 +689,12 @@ crossword =
         }else if ( checker === "word" | checker === 2) {
           crossword.crosswords[id].check = 
             function(number, letters){
-              
+              return puzzle_grid.check_word(number);
             };
         }else if ( checker === "grid" | checker === 3){
           crossword.crosswords[id].check = 
             function(current_grid){
-
+              return puzzle_grid.check_word(grid_coord_values);
             };
         }else{
           crossword.crosswords[id].check = 
