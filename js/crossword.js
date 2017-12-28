@@ -83,8 +83,12 @@ crossword =
         return false;
       };
 
-      crossword.tools.Ring = function(items = []){
-        
+      crossword.tools.Ring = function(items){
+          // initialize
+          if ( items === undefined ) {
+            items = [];
+          }
+
           // items
           this.items = Array.from(items);
 
