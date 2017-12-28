@@ -6,12 +6,12 @@ crossword =
       // * this function returns an object which will store the crossword module
       //
       // * the module consists of 
-      //   - tools - functions to solve general JS problems 
-      //   - cw_helper - functions to solve particular crossword problems
-      //   - other - all other items are the offiziel crossword API to be used for 
-      //      - crossword creation
-      //      - crossword manipulation
-      //      - crossword ...
+      //   - the official crossword API to be used for 
+      //      > crossword creation
+      //      > crossword instance handling
+      //   - tools: functions to solve general JS problems 
+      //   - cw_helper: functions to solve particular crossword problems
+
 
 
       
@@ -21,6 +21,11 @@ crossword =
       crossword.tools     = {};
       crossword.cw_helper = {};
       crossword.crosswords = {};
+
+
+
+      // ---- example data ----------------------------------------------------
+      
       crossword.example_puzzle_data = 
         [
           {"x": 11, "y": 1, "orientation": "down", "clue": "Elongated fish", "answer": "EEL"},
@@ -43,6 +48,8 @@ crossword =
       
       
       
+
+
       // ---- tools ----------------------------------------------------------
       
       // - check that arrays contain same values (no matter the order)
@@ -326,7 +333,8 @@ crossword =
 
         var puzzle_grid = 
         {
-          "data": puzzle_grid_data,
+          "grid_data": puzzle_grid_data,
+          "word_data": puzzle_data,
           
           "get_cell": function(x, y){
             // check input 
@@ -335,7 +343,7 @@ crossword =
             }
 
             // filter elements according to coordinates
-            var cell = this.data[x - 1][y - 1];
+            var cell = this.grid_data[x - 1][y - 1];
             // return
             return cell;
           },
@@ -345,12 +353,36 @@ crossword =
             return this.get_cell(x,y).letter.toLowerCase() === letter.toLowerCase();
           },
 
-          "get_word": function(direction, number){
-            
+          "get_word": function(number, direction){
+            res = this.word_data.filter(
+              function(item){
+                return item.orientation[0] === direction[0] & item.number === number;
+              }
+            );
+            return res;
           },
 
           // check if word is correct
-          "check_word": function(number, letters){
+          "check_word": function(number, direction, letter){
+            // get word
+            var word = this.get_word(number = number, direction = direction);
+            
+            // check it 
+            for(i = 0; i < word.length; i++){
+              if(word[i] != letter[i]){
+                return false;
+              }
+            }
+
+            // return
+            return true; 
+          },
+
+          "get_grid": function(){
+
+          },
+
+          "check_grid": function(){
 
           }
         };
@@ -635,22 +667,68 @@ crossword =
           }
         );
 
-        $("#" + id + " .puzzle_input").keyup(
-          function( event ) {
-            var id_parts = this.id.split("_");
-            var x = Number(id_parts[1]);
-            var y = Number(id_parts[2]);
-            var letter = this.value;
-
-            if ( crossword.crosswords[id].check(x = x, y = y, letter) ){
-              this.classList.add("solved");
-              this.parentElement.classList.add("solved");
-            }else{
-              this.parentElement.classList.remove("solved");
-              this.classList.remove("solved");
+        if ( checker === "character" | checker === 1 | checker === "letter"){
+          
+          $("#" + id + " .puzzle_input").keyup(
+            function( event ) {
+              var id_parts      = this.id.split("_");
+              var x             = Number(id_parts[1]);
+              var y             = Number(id_parts[2]);
+              var letter        = this.value;
+  
+              if ( crossword.crosswords[id].check(x = x, y = y, letter) ){
+                this.classList.add("solved");
+                this.parentElement.classList.add("solved");
+              }else{
+                this.parentElement.classList.remove("solved");
+                this.classList.remove("solved");
+              }
             }
-          }
-        );
+          );
+
+        }else if ( checker === "word" | checker === 2) {
+          $("#" + id + " .puzzle_input").keyup(
+            function( event ) {
+              // get number dwon or set it to 0
+              var number_down   = this.parentElement.getAttribute("number_down");
+              if ( number_down === null ){
+                number_down = 0;
+              }else{
+                number_down = Number(number_down.substr(1));
+              }
+              
+              // get number across or set it to 0
+              var number_across   = this.parentElement.getAttribute("number_across");
+              if ( number_across === null ){
+                number_across = 0;
+              }else{
+                number_across = Number(number_across.substr(1));
+              }
+  
+              // DEV !!! : make checker for words work //
+              if ( crossword.crosswords[id].check(number = number_down, direction = "down", letter = "spider") ){
+                this.classList.add("solved");
+                this.parentElement.classList.add("solved");
+              }else{
+                this.parentElement.classList.remove("solved");
+                this.classList.remove("solved");
+              }
+
+              if ( crossword.crosswords[id].check(number = number_across, direction = "across", letter = "spider") ){
+                this.classList.add("solved");
+                this.parentElement.classList.add("solved");
+              }else{
+                this.parentElement.classList.remove("solved");
+                this.classList.remove("solved");
+              }
+            }
+          );
+
+        }else if ( checker === "grid" | checker === 3){
+          
+        }else{
+          
+        }
 
         
         // add data and functions to crossword module per crossword instance 
@@ -693,12 +771,12 @@ crossword =
         }else if ( checker === "word" | checker === 2) {
           crossword.crosswords[id].check = 
             function(number, letters){
-              return puzzle_grid.check_word(number);
+              return puzzle_grid.check_word(number, direction, letter);
             };
         }else if ( checker === "grid" | checker === 3){
           crossword.crosswords[id].check = 
             function(current_grid){
-              return puzzle_grid.check_word(grid_coord_values);
+              return puzzle_grid.check_grid(grid_coord_values);
             };
         }else{
           crossword.crosswords[id].check = 
