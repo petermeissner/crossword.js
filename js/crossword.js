@@ -343,7 +343,7 @@ crossword =
             }
 
             // filter elements according to coordinates
-            var cell = this.grid_data[x - 1][y - 1];
+            var cell = this.grid_data[y - 1][x - 1];
             // return
             return cell;
           },
@@ -359,17 +359,17 @@ crossword =
                 return item.orientation[0] === direction[0] & item.number === number;
               }
             );
-            return res;
+            return res[0];
           },
 
           // check if word is correct
           "check_word": function(number, direction, letter){
             // get word
-            var word = this.get_word(number = number, direction = direction);
+            var word = this.get_word(number = number, direction = direction).answer;
             
             // check it 
-            for(i = 0; i < word.length; i++){
-              if(word[i] != letter[i]){
+            for(var i = 0; i < word.length; i++){
+              if( word[i].toLowerCase() != letter[i].toLowerCase() ){
                 return false;
               }
             }
@@ -482,10 +482,10 @@ crossword =
 
       // question list - across
       crossword.cw_helper.build_question_list = function(puzzle_data, direction){
-        // - sort puzzle data
+        // [<~side-effect] - sort puzzle data
         puzzle_data = crossword.cw_helper.sort_puzzle_data(puzzle_data);        
         
-        // - enumerate questions - same coordinates -> same number 
+        // [<~side-effect] - enumerate questions - same coordinates -> same number
         puzzle_data = crossword.cw_helper.enmumerate_puzzle_data(puzzle_data);  
 
         // build up list 
@@ -614,12 +614,13 @@ crossword =
 
         $("#" + id + " ul.question_list > li").click(
           function(){
-            coords = this.getAttribute("data-coords").split(",");
-            $(
-              "#pid"    + "_" +
-              coords[1] + "_" +
-              coords[0]
-            )[0].focus();
+            var coords = this.getAttribute("data-coords").split(",");
+            var input_elements = 
+              $(
+                "#" + id + " " +
+                "#pid_" + coords[0] + "_" + coords[1]
+              );
+            input_elements[0].focus();
           }
         );
 
@@ -686,48 +687,82 @@ crossword =
             }
           );
 
-        }else if ( checker === "word" | checker === 2) {
+        } else if ( checker === "word" | checker === 2 ) {
           $("#" + id + " .puzzle_input").keyup(
             function( event ) {
-              // get number dwon or set it to 0
-              var number_down   = this.parentElement.getAttribute("number_down");
-              if ( number_down === null ){
-                number_down = 0;
-              }else{
+              
+              var direction_array = [];
+              var number_array    = [];
+
+              // get number down or set it to 0
+              var number_down = 
+                this.parentElement.getAttribute("number_down");
+
+              if ( number_down !== null ){
+                direction_array.push("down");
                 number_down = Number(number_down.substr(1));
+                number_array.push(number_down);
               }
               
               // get number across or set it to 0
-              var number_across   = this.parentElement.getAttribute("number_across");
-              if ( number_across === null ){
-                number_across = 0;
-              }else{
+              var number_across = 
+                this.parentElement.getAttribute("number_across");
+
+              if(number_across !== null ){
+                direction_array.push("across");
                 number_across = Number(number_across.substr(1));
-              }
-  
-              // DEV !!! : make checker for words work //
-              if ( crossword.crosswords[id].check(number = number_down, direction = "down", letter = "spider") ){
-                this.classList.add("solved");
-                this.parentElement.classList.add("solved");
-              }else{
-                this.parentElement.classList.remove("solved");
-                this.classList.remove("solved");
+                number_array.push(number_across);
               }
 
-              if ( crossword.crosswords[id].check(number = number_across, direction = "across", letter = "spider") ){
-                this.classList.add("solved");
-                this.parentElement.classList.add("solved");
-              }else{
-                this.parentElement.classList.remove("solved");
-                this.classList.remove("solved");
+              // DEV !!! : make checker for words work //
+              for(var i = 0; i < direction_array.length; i++ ) {
+                // get input elements that belong to word
+                var elements     = 
+                  $(
+                    "#" + id + 
+                    " td[" + 
+                      "number_" + direction_array[i] + "='" + 
+                      direction_array[i][0] + number_array[i] + 
+                    "']" + 
+                    " input"
+                  );
+                
+                // extract their value
+                var letter = 
+                Array.from(
+                  elements.map(
+                    function(){
+                      return this.value;
+                    }
+                  )
+                );
+                
+                // check value against word
+                var check_result = 
+                  crossword.crosswords[id].check(
+                    number    = number_array[i], 
+                    direction = direction_array[i], 
+                    letter    = letter
+                  );
+
+                // act upon check 
+                if ( check_result ) {
+                  elements.addClass("solved");
+                  elements.parent().addClass("solved");
+                } else {
+                  elements.removeClass("solved");
+                  elements.parent().removeClass("solved");
+                }
               }
+              
+
             }
           );
 
         }else if ( checker === "grid" | checker === 3){
-          
+          // get grid / check grid
         }else{
-          
+          // do nothing
         }
 
         
@@ -770,7 +805,7 @@ crossword =
             };
         }else if ( checker === "word" | checker === 2) {
           crossword.crosswords[id].check = 
-            function(number, letters){
+            function(number, direction, letter){
               return puzzle_grid.check_word(number, direction, letter);
             };
         }else if ( checker === "grid" | checker === 3){
