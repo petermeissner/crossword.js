@@ -37,19 +37,23 @@ body {
   font-weight: bold;
 }
 
-.puzzle_wrapper {
-  text-align: -webkit-center;
-  margin: 5px;
+.across_wrapper, .down_wrapper, .crossword_wrapper {
+  min-width: 25%;
+  max-width: 45%;
+  display: inline-block;
+  vertical-align: top;
 }
 
-.across_wrapper {
-  width: 45%;
-  float: left;
+.down_wrapper::before {
+  content: "down";
+  padding-left: 10px;
+  font-weight: bold;
 }
 
-.down_wrapper {
-  width: 45%;
-  float: left;
+.across_wrapper:before {
+  content: "across";
+  padding-left: 10px;
+  font-weight: bold;
 }
 
 table.puzzle_grid{
