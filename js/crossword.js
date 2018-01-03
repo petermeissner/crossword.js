@@ -28,22 +28,22 @@ crossword =
       
       crossword.example_puzzle_data = 
         [
-          {"x": 11, "y": 1, "orientation": "down", "clue": "Elongated fish", "answer": "EEL"},
-          {"x": 1,"y": 11,"orientation": "across","clue": "Strong swimmer and jumper","answer": "SALMON"},
-          {"x": 3,"y": 4,"orientation": "down","clue": "Largest primate","answer": "GORILLA"},
-          {"x": 2,"y": 1,"orientation": "down","clue": "Eight legged","answer": "SPIDER"},
-          {"x": 3,"y": 2,"orientation": "across","clue": "Armored reptile","answer": "TORTOISE"},
-          {"x": 4,"y": 5,"orientation": "down","clue": "Medium-sized omnivorous mammal","answer": "JACKAL"},
-          {"x": 10,"y": 1,"orientation": "down","clue": "Slow but armored","answer": "SNAIL"},
-          {"x": 6,"y": 3,"orientation": "down","clue": "Australian original","answer": "KANGAROO"},
-          {"x": 4,"y": 5,"orientation": "across","clue": "Fast runner with long ears","answer": "HARE"},
-          {"x": 8,"y": 3,"orientation": "down","clue": "Living in colonies","answer": "TERMITE"},
-          {"x": 11,"y": 5,"orientation": "down","clue": "Bait fish","answer": "MINNOW"},
-          {"x": 9,"y": 5,"orientation": "down","clue": "Small, slender predator","answer": "WEASEL"},
-          {"x": 10,"y": 8,"orientation": "down","clue": "Striped but no predator","answer": "BEE"},
-          {"x": 7,"y": 3,"orientation": "down","clue": "clawed and armored sidewalker","answer": "CRAB"},
-          {"x": 5,"y": 6,"orientation": "down","clue": "Tailless humanlike primate","answer": "APE"},
-          {"x": 5,"y": 1,"orientation": "down","clue": "Castrated adult male cattle","answer": "OX"}
+          {"y": 11, "x":  1, "orientation": "across", "clue": "Elongated fish", "answer": "EEL"},
+          {"y": 1,  "x": 11, "orientation": "down","clue": "Strong swimmer and jumper","answer": "SALMON"},
+          {"y": 3,  "x":  4, "orientation": "across","clue": "Largest primate","answer": "GORILLA"},
+          {"y": 2,  "x":  1, "orientation": "across","clue": "Eight legged","answer": "SPIDER"},
+          {"y": 3,  "x":  2, "orientation": "down","clue": "Armored reptile","answer": "TORTOISE"},
+          {"y": 4,  "x":  5, "orientation": "across","clue": "Medium-sized omnivorous mammal","answer": "JACKAL"},
+          {"y": 10, "x":  1, "orientation": "across","clue": "Slow but armored","answer": "SNAIL"},
+          {"y": 6,  "x":  3, "orientation": "across","clue": "Australian original","answer": "KANGAROO"},
+          {"y": 4,  "x":  5, "orientation": "down","clue": "Fast runner with long ears","answer": "HARE"},
+          {"y": 8,  "x":  3, "orientation": "across","clue": "Living in colonies","answer": "TERMITE"},
+          {"y": 11, "x":  5, "orientation": "across","clue": "Bait fish","answer": "MINNOW"},
+          {"y": 9,  "x":  5, "orientation": "across","clue": "Small, slender predator","answer": "WEASEL"},
+          {"y": 10, "x":  8, "orientation": "across","clue": "Striped but no predator","answer": "BEE"},
+          {"y": 7,  "x":  3, "orientation": "across","clue": "clawed and armored sidewalker","answer": "CRAB"},
+          {"y": 5,  "x":  6, "orientation": "across","clue": "Tailless humanlike primate","answer": "APE"},
+          {"y": 5,  "x":  1, "orientation": "across","clue": "Castrated adult male cattle","answer": "OX"}
         ];
       
       
@@ -526,7 +526,7 @@ crossword =
         crossword.cw_helper.check_puzzle_data(puzzle_data = puzzle_data); 
         
         // add crossword to DOM element
-        cw_html =  
+        var cw_html =  
             '<div class = "crossword_main_wrapper" id = "' + id + '">' + 
               '    <div class = "crossword_wrapper puzzle_wrapper"></div>' + 
               '    <div class = "crossword_wrapper across_wrapper"></div>' + 
