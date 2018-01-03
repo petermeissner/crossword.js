@@ -11,19 +11,23 @@
 - interactively solve crossword
 - crossword checking and visualization
 
+**see also**
+- Crossword generation (language R): https://github.com/petermeissner/crossword
+
 
 **todos**
 
+- layout overhaul : font, lines, colors, etc
+
+- go through code and prevent data leaking 
+
 - get example right (index.html)
 
-- crossword needs a check function
-    - ~~!define if checker is needed when creating crossword! (good when later on handling cw data and checking from server backend)~~
-        - ~~check letter~~
-        - check word
-        - check crossword
+- ~~crossword needs a check function : check letter~~
+- crossword needs a check function : check word
+- crossword needs a check function : check grid
 
-- storage and acces of current cw state
-    - make it easy to pass information to server backend for checking
+- storage and acces of current cw state : make it easy to pass information to server backend for checking
 
 
 
