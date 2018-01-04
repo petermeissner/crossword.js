@@ -2,6 +2,12 @@ body {
   font-family: sans-serif;
 }
 
+td::before {
+  content: attr(start_number);
+  position: absolute;
+  font-size: 60%;
+}
+
 .active {
   color:rgba(100, 148, 237, 0.75);
   font-weight: bold;

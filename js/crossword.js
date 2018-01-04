@@ -27,24 +27,42 @@ crossword =
       // ---- example data ----------------------------------------------------
       
       crossword.example_puzzle_data = 
+      {
+        "grid":
+        [// 1   2   3   4   5   6   7   8   9   10
+          ["C","A","T","T","L","E", "","D","O","G"], //  1
+          ["F","I","S","H", "", "", "", "","X","O"], //  2
+          [ "", "","W","O","M","B","A","T", "","R"], //  3
+          ["C","S", "","H","Y","E","N","A", "","I"], //  4
+          ["O","K", "","G","O","A","T", "","S","L"], //  5
+          ["D","U","C","K", "","V","E","F","N","L"], //  6
+          [ "","N", "", "","D","E","L","L","A","A"], //  7
+          [ "","K","G", "","E","R","O","Y","K", ""], //  8
+          [ "", "","N", "","E", "","P", "","E", ""], //  9
+          ["S","Q","U","I","R","R","E","L", "", ""]  // 10
+        ],
+        "words":
         [
-          {"y": 11, "x":  1, "orientation": "across", "clue": "Elongated fish", "answer": "EEL"},
-          {"y": 1,  "x": 11, "orientation": "down","clue": "Strong swimmer and jumper","answer": "SALMON"},
-          {"y": 3,  "x":  4, "orientation": "across","clue": "Largest primate","answer": "GORILLA"},
-          {"y": 2,  "x":  1, "orientation": "across","clue": "Eight legged","answer": "SPIDER"},
-          {"y": 3,  "x":  2, "orientation": "down","clue": "Armored reptile","answer": "TORTOISE"},
-          {"y": 4,  "x":  5, "orientation": "across","clue": "Medium-sized omnivorous mammal","answer": "JACKAL"},
-          {"y": 10, "x":  1, "orientation": "across","clue": "Slow but armored","answer": "SNAIL"},
-          {"y": 6,  "x":  3, "orientation": "across","clue": "Australian original","answer": "KANGAROO"},
-          {"y": 4,  "x":  5, "orientation": "down","clue": "Fast runner with long ears","answer": "HARE"},
-          {"y": 8,  "x":  3, "orientation": "across","clue": "Living in colonies","answer": "TERMITE"},
-          {"y": 11, "x":  5, "orientation": "across","clue": "Bait fish","answer": "MINNOW"},
-          {"y": 9,  "x":  5, "orientation": "across","clue": "Small, slender predator","answer": "WEASEL"},
-          {"y": 10, "x":  8, "orientation": "across","clue": "Striped but no predator","answer": "BEE"},
-          {"y": 7,  "x":  3, "orientation": "across","clue": "clawed and armored sidewalker","answer": "CRAB"},
-          {"y": 5,  "x":  6, "orientation": "across","clue": "Tailless humanlike primate","answer": "APE"},
-          {"y": 5,  "x":  1, "orientation": "across","clue": "Castrated adult male cattle","answer": "OX"}
-        ];
+          {"row":10, "col": 1, "length": 8, "direction":"right","clue":"squirrel","word":"SQUIRREL"},
+          {"row": 3, "col": 7, "length": 8, "direction":"down","clue":"Even-toad hoofed animal which is neither sheep, cattle, nor goat","word":"ANTELOPE"},
+          {"row": 3, "col": 3, "length": 6, "direction":"right","clue":"wombat","word":"WOMBAT"},
+          {"row": 4, "col": 4, "length": 5, "direction":"right","clue":"hyena","word":"HYENA"},
+          {"row": 8, "col": 3, "length": 3, "direction":"down","clue":"gnu","word":"GNU"},
+          {"row": 1, "col":10, "length": 7, "direction":"down","clue":"Largest primate","word":"GORILLA"},
+          {"row": 3, "col": 6, "length": 6, "direction":"down","clue":"beaver","word":"BEAVER"},
+          {"row": 1, "col": 1, "length": 6, "direction":"right","clue":"cattle","word":"CATTLE"},
+          {"row": 5, "col": 4, "length": 4, "direction":"right","clue":"goat","word":"GOAT"},
+          {"row": 2, "col": 1, "length": 4, "direction":"right","clue":"fish","word":"FISH"},
+          {"row": 6, "col": 1, "length": 4, "direction":"right","clue":"duck","word":"DUCK"},
+          {"row": 5, "col": 9, "length": 5, "direction":"down","clue":"snake","word":"SNAKE"},
+          {"row": 6, "col": 8, "length": 3, "direction":"down","clue":"fly","word":"FLY"},
+          {"row": 4, "col": 2, "length": 5, "direction":"down","clue":"skunk","word":"SKUNK"},
+          {"row": 4, "col": 1, "length": 3, "direction":"down","clue":"cod","word":"COD"},
+          {"row": 7, "col": 5, "length": 4, "direction":"down","clue":"deer","word":"DEER"},
+          {"row": 1, "col": 8, "length": 3, "direction":"right","clue":"dog","word":"DOG"},
+          {"row": 1, "col": 9, "length": 2, "direction":"down","clue":"Castrated adult male cattle","word":"OX"}
+        ]
+      };
       
       
       
@@ -153,32 +171,50 @@ crossword =
 
       // - check consistency of puzzle_data
       crossword.cw_helper.check_puzzle_data = function(puzzle_data){
-        
-        // check that data is an array
-        if( !crossword.tools.is_type_x(puzzle_data, "Array") ){
-          throw "puzzle_data is not an array.";
-        }
 
-        // check that each array item has all the data needed 
-        for (var i = 0; i < puzzle_data.length; i++ ){
-          crossword.tools.have_same_elements(
-            Object.keys(puzzle_data[i]),
-            ["clue", "answer", "orientation", "x", "y"]
-          );
+        // check that each word item has all the fields needed
+        var fields_needed    = ["row", "col", "length","direction", "clue", "word"];
+        var field_check      = true;
+
+        for ( var i = 0; i < puzzle_data.words.length; i++ ){
+          
+          // check for nbecessary fields
+          var fields_available = Object.keys(puzzle_data.words[i])
+          for (var j = 0; j < fields_needed.length; j++){
+            field_check = 
+              field_check && 
+              ( $.inArray( fields_needed[j], fields_available) ) !== -1 ;
+          }
+
+          if ( !field_check ) {
+            window.i = i;
+            window.e = puzzle_data.words[i];
+            throw("elements do not match, required fields: row, col, length, direction, clue, word");
+          }
+
+          // check for direction values
+          var direction_check = 
+            puzzle_data.words[i].direction === "down" || 
+            puzzle_data.words[i].direction === "right"; 
+          if ( !direction_check ) {
+            throw("direction neither down nor right")
+          }
+
         }
+        
       };
       
       // - sort puzzle data
       crossword.cw_helper.sort_puzzle_data = function(puzzle_data){
-        puzzle_data.sort(
+        puzzle_data.words.sort(
           function(a,b){
-            if ( a.x > b.x ) {
+            if ( a.row > b.row ) {
               return 1;
-            }else if ( a.x < b.x ) {
+            }else if ( a.row < b.row ) {
               return -1;
-            }else if ( a.y > b.y ) {
+            }else if ( a.col > b.col ) {
               return 1;
-            }else if ( a.y < b.y ) {
+            }else if ( a.col < b.col ) {
               return -1;
             }else{
               return 0;
@@ -189,32 +225,38 @@ crossword =
         return puzzle_data;
       };
 
+
       // - prepare puzzle_data
       crossword.cw_helper.enmumerate_puzzle_data = function(puzzle_data){
         var coordinates = [];
         var number      = [];
 
-        for (var i = 0; i < puzzle_data.length; i++) {
+        for (var i = 0; i < puzzle_data.words.length; i++) {
           // look up coordinates 
           index = 
             coordinates.findIndex( 
-              function(el){ 
-                return el.x === puzzle_data[i].x && el.y === puzzle_data[i].y ; 
+              function(item){ 
+                // check
+                var found = 
+                  item.col === puzzle_data.words[i].col && 
+                  item.row === puzzle_data.words[i].row
+                // return
+                return found; 
               } 
             );
 
           if ( index === -1 ) {
             // if coordinates not registered yet ...
             // - register coordinates
-            coordinates.push({"x": puzzle_data[ i ].x, "y": puzzle_data[ i ].y});
+            coordinates.push({"row": puzzle_data.words[ i ].row, "col": puzzle_data.words[ i ].col});
             // - register new number 
             number.push( number.length + 1 );
             // - add number to puzzle_data
-            puzzle_data[ i ].number = number[ number.length - 1 ];
+            puzzle_data.words[i].number = number[ number.length - 1 ];
           }else{
             // if coordinates have already been registered ...
             // - use lookup to retrieve number and assign to current puzzle_data element
-            puzzle_data[ i ].number = number[ index ];
+            puzzle_data.words[i].number = number[ index ];
           }
         }
         
@@ -230,42 +272,17 @@ crossword =
             "rows":    0, 
             "columns": 0
           };
-
-          for (var i = 0; i < puzzle_data.length; i++ ) {
-            if ( puzzle_data[i].orientation == "down" ) {
-              dimensions.columns = 
-                Math.max(
-                  dimensions.columns, 
-                  puzzle_data[i].x
-                );
-              
-                dimensions.rows = 
-                  Math.max(
-                    dimensions.rows, 
-                    puzzle_data[i].y + puzzle_data[i].answer.length - 1
-                  );
-
-            } else if( puzzle_data[i].orientation == "across" ) {
-              
-              dimensions.columns = 
-                Math.max(
-                  dimensions.columns, 
-                  puzzle_data[i].x + puzzle_data[i].answer.length - 1
-                );
-              
-              dimensions.rows = 
-              Math.max(
-                dimensions.rows, 
-                puzzle_data[i].y
-              );
-            }
+          
+          if ( puzzle_data.grid.length > 0 ){
+            dimensions.rows = puzzle_data.grid.length;
+            dimensions.columns = puzzle_data.grid[0].length;
           }
           
           // return
           return dimensions;
         };
 
-        
+
 
       // - building a grid 
       crossword.cw_helper.build_grid = function(puzzle_data){
@@ -288,45 +305,54 @@ crossword =
 
             // fill arrays with default data
             for (var cols = 0; cols < puzzle_dimensions.columns; cols++ ){
-
+              var word = 
+                puzzle_data.words.filter(
+                  function(item){
+                    return ( item.row === 1 && item.col === 10 );
+                  }
+                );
               puzzle_grid_data[rows][cols] = 
                 {
-                  letter: "",
-                  words: new Set(),
-                  directions: new Set(),
-                  number: new Set(),
-                  start: false
+                  "row":        rows + 1,
+                  "column":     cols + 1,
+                  "letter":     puzzle_data.grid[rows][cols],
+                  "words":      new Set(),
+                  "directions": new Set(),
+                  "number":     new Set(),
+                  "start":      false
                 };
             }
         }
 
-        var number_counter = 0;
-
         // fill grid 
-        for (var i = 0; i < puzzle_data.length; i++){
+        for ( var i = 0; i < puzzle_data.words.length; i++){
           
-          var x                = puzzle_data[i].x -1;
-          var y                = puzzle_data[i].y -1;
-          var word             = puzzle_data[i].answer;
-          var word_orientation = puzzle_data[i].orientation;
-          var xk               = x;
-          var yk               = y;
-          var number           = [puzzle_data[i].orientation[0], puzzle_data[i].number].join("");
+          var row              = puzzle_data.words[i].row;
+          var col              = puzzle_data.words[i].col;
           
+          var row_i            = puzzle_data.words[i].row;
+          var col_i            = puzzle_data.words[i].col;
+
+          var word             = puzzle_data.words[i].word;
+          var word_direction   = puzzle_data.words[i].direction;
+          var number           = [puzzle_data.words[i].direction[0], puzzle_data.words[i].number].join("");
+          
+
+         
           // mark start
-          puzzle_grid_data[yk][xk].start = true; 
+          puzzle_grid_data[row-1][col-1].start        = true; 
+          puzzle_grid_data[row-1][col-1].start_number = number; 
 
           for ( var k = 0; k < word.length; k++ ) {
-            if( word_orientation == "across" ){
-              xk = x + k;
+            if( word_direction == "right" ){
+              col_i = col + k;
             }else{
-              yk = y + k;
+              row_i = row + k;
             }
-            puzzle_grid_data[yk][xk].directions.add(word_orientation);
-            puzzle_grid_data[yk][xk].words.add(i);
-            puzzle_grid_data[yk][xk].number.add(number);
-            puzzle_grid_data[yk][xk].letter = word[k];
-
+            puzzle_grid_data[row_i-1][col_i-1].directions.add(word_direction);
+            puzzle_grid_data[row_i-1][col_i-1].words.add(i);
+            puzzle_grid_data[row_i-1][col_i-1].number.add(number);
+            puzzle_grid_data[row_i-1][col_i-1].letter = word[k];
           }
         }
 
@@ -334,7 +360,7 @@ crossword =
         var puzzle_grid = 
         {
           "grid_data": puzzle_grid_data,
-          "word_data": puzzle_data,
+          "word_data": puzzle_data.words,
           
           "get_cell": function(x, y){
             // check input 
@@ -356,7 +382,7 @@ crossword =
           "get_word": function(number, direction){
             res = this.word_data.filter(
               function(item){
-                return item.orientation[0] === direction[0] & item.number === number;
+                return item.direction[0] === direction[0] && item.number === number;
               }
             );
             return res[0];
@@ -434,11 +460,16 @@ crossword =
                   number_attr.push("number_" + directions[d] + "='" + numbers[d] + "'");
                 }
 
+
                 // prepare start attribute
                 if ( puzzle_grid.get_cell(x,i).start ){
-                  start_attr = "start='true'";
+                  start_attr   = " start='true' ";
+                  start_number = 
+                    " start_number=" + 
+                    Number(puzzle_grid.get_cell(x,i).start_number.substr(1));
                 }else{
-                  start_attr = "";
+                  start_attr   = "";
+                  start_number = ""
                 }
                 
                 // 
@@ -460,7 +491,8 @@ crossword =
                     cell_class + " " + 
                     number_attr.join(" ") + " " +
                     start_attr + 
-                  '">'+ 
+                    start_number +
+                  '>' + 
                     cell_input +
                   '</td>'
                 );
@@ -475,6 +507,7 @@ crossword =
           // end of table
           grid_table.push("</table>");
           
+        window.puzzle_grid = puzzle_grid;
         // return 
         return grid_table.join('');
       };
@@ -668,7 +701,7 @@ crossword =
           }
         );
 
-        if ( checker === "character" | checker === 1 | checker === "letter"){
+        if ( checker === "character" || checker === 1 || checker === "letter" ){
           
           $("#" + id + " .puzzle_input").keyup(
             function( event ) {
@@ -687,7 +720,7 @@ crossword =
             }
           );
 
-        } else if ( checker === "word" | checker === 2 ) {
+        } else if ( checker === "word" || checker === 2 ) {
           $("#" + id + " .puzzle_input").keyup(
             function( event ) {
               
@@ -758,7 +791,7 @@ crossword =
             }
           );
 
-        }else if ( checker === "grid" | checker === 3){
+        }else if ( checker === "grid" || checker === 3){
           // get grid / check grid
         }else{
           // do nothing
@@ -797,17 +830,17 @@ crossword =
         };
 
         // add checker for crossword
-        if ( checker === "character" | checker === 1 | checker === "letter"){
+        if ( checker === "character" || checker === 1 || checker === "letter"){
           crossword.crosswords[id].check = 
             function(x,y, letter){
               return puzzle_grid.check_cell(x,y, letter);
             };
-        }else if ( checker === "word" | checker === 2) {
+        }else if ( checker === "word" || checker === 2) {
           crossword.crosswords[id].check = 
             function(number, direction, letter){
               return puzzle_grid.check_word(number, direction, letter);
             };
-        }else if ( checker === "grid" | checker === 3){
+        }else if ( checker === "grid" || checker === 3){
           crossword.crosswords[id].check = 
             function(current_grid){
               return puzzle_grid.check_grid(grid_coord_values);
