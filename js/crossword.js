@@ -160,7 +160,7 @@ crossword =
         }
 
         // check that each array item has all the data needed 
-        for ( i = 0; i < puzzle_data.length; i++ ){
+        for (var i = 0; i < puzzle_data.length; i++ ){
           crossword.tools.have_same_elements(
             Object.keys(puzzle_data[i]),
             ["clue", "answer", "orientation", "x", "y"]
@@ -194,7 +194,7 @@ crossword =
         var coordinates = [];
         var number      = [];
 
-        for ( i = 0; i < puzzle_data.length; i++) {
+        for (var i = 0; i < puzzle_data.length; i++) {
           // look up coordinates 
           index = 
             coordinates.findIndex( 
@@ -231,7 +231,7 @@ crossword =
             "columns": 0
           };
 
-          for ( i = 0; i < puzzle_data.length; i++ ) {
+          for (var i = 0; i < puzzle_data.length; i++ ) {
             if ( puzzle_data[i].orientation == "down" ) {
               dimensions.columns = 
                 Math.max(
@@ -281,13 +281,13 @@ crossword =
         
         // build grid 
         var puzzle_grid_data = Array(puzzle_data.rows);
-        for ( rows = 0; rows < puzzle_dimensions.rows; rows++ ){
+        for (var rows = 0; rows < puzzle_dimensions.rows; rows++ ){
           
           // fill in arrays
           puzzle_grid_data[rows] = Array(puzzle_dimensions.columns);
 
             // fill arrays with default data
-            for ( cols = 0; cols < puzzle_dimensions.columns; cols++ ){
+            for (var cols = 0; cols < puzzle_dimensions.columns; cols++ ){
 
               puzzle_grid_data[rows][cols] = 
                 {
@@ -303,7 +303,7 @@ crossword =
         var number_counter = 0;
 
         // fill grid 
-        for (i = 0; i < puzzle_data.length; i++){
+        for (var i = 0; i < puzzle_data.length; i++){
           
           var x                = puzzle_data[i].x -1;
           var y                = puzzle_data[i].y -1;
@@ -316,7 +316,7 @@ crossword =
           // mark start
           puzzle_grid_data[yk][xk].start = true; 
 
-          for ( k = 0; k < word.length; k++ ) {
+          for ( var k = 0; k < word.length; k++ ) {
             if( word_orientation == "across" ){
               xk = x + k;
             }else{
@@ -368,7 +368,7 @@ crossword =
             var word = this.get_word(number = number, direction = direction).answer;
             
             // check it 
-            for(var i = 0; i < word.length; i++){
+            for ( var i = 0; i < word.length; i++ ) {
               if( word[i].toLowerCase() != letter[i].toLowerCase() ){
                 return false;
               }
@@ -410,12 +410,12 @@ crossword =
           var cell_input  = ""; 
 
           // - cycle through rows and add table rows and elements
-          for (var i = 1; i <= puzzle_dimensions.rows; ++i) {
+          for ( var i = 1; i <= puzzle_dimensions.rows; ++i ) {
             
             // - start of row
             grid_table.push("<tr>");
               // - add elements
-              for (var x = 1; x <= puzzle_dimensions.columns; ++x) {
+              for ( var x = 1; x <= puzzle_dimensions.columns; ++x ) {
                 
                 // prepare class attribute
                 if ( puzzle_grid.get_cell(x, i).directions.size == 0 ){
@@ -430,7 +430,7 @@ crossword =
                 numbers = Array.from( puzzle_grid.get_cell(x,i).number );
                 directions = Array.from( puzzle_grid.get_cell(x, i).directions );
                 number_attr = [""];
-                for(d=0; d < numbers.length; d++){
+                for ( var d = 0; d < numbers.length; d++ ) {
                   number_attr.push("number_" + directions[d] + "='" + numbers[d] + "'");
                 }
 
@@ -491,7 +491,7 @@ crossword =
         // build up list 
         var question_list = ["<ul class='question_list "+ direction +"'>"] ;
 
-        for ( i = 0; i < puzzle_data.length; i++ ) {
+        for (var i = 0; i < puzzle_data.length; i++ ) {
           if( puzzle_data[i].orientation === direction ){
             question_list.push(
               "<li " +
@@ -678,11 +678,11 @@ crossword =
               var letter        = this.value;
   
               if ( crossword.crosswords[id].check(x = x, y = y, letter) ){
-                this.classList.add("solved");
-                this.parentElement.classList.add("solved");
+                this.classList.add("solved_letter");
+                this.parentElement.classList.add("solved_letter");
               }else{
-                this.parentElement.classList.remove("solved");
-                this.classList.remove("solved");
+                this.parentElement.classList.remove("solved_letter");
+                this.classList.remove("solved_letter");
               }
             }
           );
@@ -714,8 +714,7 @@ crossword =
                 number_array.push(number_across);
               }
 
-              // DEV !!! : make checker for words work //
-              for(var i = 0; i < direction_array.length; i++ ) {
+              for ( var i = 0; i < direction_array.length; i++ ) {
                 // get input elements that belong to word
                 var elements     = 
                   $(
@@ -746,16 +745,16 @@ crossword =
                   );
 
                 // act upon check 
+                var solve_class = "solved_" + direction_array[i];
                 if ( check_result ) {
-                  elements.addClass("solved");
-                  elements.parent().addClass("solved");
+                  elements.addClass(solve_class);
+                  elements.parent().addClass(solve_class);
                 } else {
-                  elements.removeClass("solved");
-                  elements.parent().removeClass("solved");
+                  elements.removeClass(solve_class);
+                  elements.parent().removeClass(solve_class);
                 }
               }
               
-
             }
           );
 
