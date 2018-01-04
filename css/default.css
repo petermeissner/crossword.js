@@ -17,22 +17,22 @@ body {
   font-weight: bold;
 }
 
-.active.solved {
+.active.solved_across, active.solved_down, active.solved_letter, active.solved_grid {
   background-color:#33CC80;
   font-weight: bold;
 }
 
-.active_input.solved {
+.active_input.solved_across, .active_input.solved_down, .active_input.solved_letter, .active_input.solved_grid {
   background-color:#33CC80;
   font-weight: bold;
 }
 
-.active_hover.solved {
+.active_hover.solved_across, .active_hover.solved_down, .active_hover.active_input.solved_letter, active_hover.solved_grid {
   background-color:#33CC80;
   font-weight: bold;
 }
 
-.solved {
+.solved_across, .solved_down, .solved_letter, .solved_grid {
   background-color: lightgreen;
   font-weight: bold;
 }
