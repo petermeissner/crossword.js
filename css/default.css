@@ -44,7 +44,7 @@ td::before {
 }
 
 .across_wrapper, .down_wrapper, .crossword_wrapper {
-  min-width: 25%;
+  min-width: 10%;
   max-width: 45%;
   display: inline-block;
   vertical-align: top;
