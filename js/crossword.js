@@ -553,7 +553,7 @@ crossword =
         var cw_html =  
             '<div class = "crossword_main_wrapper" id = "' + id + '">' + 
               '    <div class = "crossword_wrapper puzzle_wrapper"></div>' + 
-              '    <div class = "crossword_wrapper across_wrapper"></div>' + 
+              '    <div class = "crossword_wrapper right_wrapper"></div>' + 
               '    <div class = "crossword_wrapper down_wrapper"></div>' + 
             '</div>';
         
@@ -566,7 +566,7 @@ crossword =
             crossword.cw_helper.build_grid_table(puzzle_data)
           );
 
-        $("#" + id + " .across_wrapper")
+        $("#" + id + " .right_wrapper")
           .append(
             crossword.cw_helper.build_question_list(puzzle_data, "right")
           );
@@ -582,12 +582,12 @@ crossword =
 
             cell.addClass("active_input");
             number_down   = cell.attr("number_down");
-            number_across = cell.attr("number_across");
+            number_right = cell.attr("number_right");
 
             $("#" + id + " li[number_down="   + number_down   + "]" ).addClass("active_input");
-            $("#" + id + " li[number_across=" + number_across + "]" ).addClass("active_input");
+            $("#" + id + " li[number_right=" + number_right + "]" ).addClass("active_input");
             $("#" + id + " td[number_down="   + number_down   + "]" ).addClass("active_input");
-            $("#" + id + " td[number_across=" + number_across + "]" ).addClass("active_input");
+            $("#" + id + " td[number_right=" + number_right + "]" ).addClass("active_input");
           }
         );
         
@@ -597,12 +597,12 @@ crossword =
             cell.removeClass("active_input");
             
             number_down   = cell.attr("number_down");
-            number_across = cell.attr("number_across");
+            number_right = cell.attr("number_right");
 
             $("#" + id + " li[number_down="   + number_down + "]" ).removeClass("active_input");
-            $("#" + id + " li[number_across=" + number_across + "]" ).removeClass("active_input");
+            $("#" + id + " li[number_right=" + number_right + "]" ).removeClass("active_input");
             $("#" + id + " td[number_down="   + number_down + "]" ).removeClass("active_input");
-            $("#" + id + " td[number_across=" + number_across + "]" ).removeClass("active_input");
+            $("#" + id + " td[number_right=" + number_right + "]" ).removeClass("active_input");
           }
         );
 
@@ -621,18 +621,18 @@ crossword =
           }
         );
 
-        $("#" + id + " ul.question_list > li[number_across]").hover(
+        $("#" + id + " ul.question_list > li[number_right]").hover(
           function(){
             var cell = $(this);
-            var number_across = cell.attr("number_across");
+            var number_right = cell.attr("number_right");
             cell.addClass("active_hover");
-            $("#" + id + " td[number_across="   + number_across + "]" ).addClass("active_hover");
+            $("#" + id + " td[number_right="   + number_right + "]" ).addClass("active_hover");
           },
           function(){
             var cell = $(this);
-            var number_across = cell.attr("number_across");
+            var number_right = cell.attr("number_right");
             cell.removeClass("active_hover");
-            $("#" + id + " td[number_across="   + number_across + "]" ).removeClass("active_hover");
+            $("#" + id + " td[number_right="   + number_right + "]" ).removeClass("active_hover");
           }
         );
 
@@ -759,14 +759,14 @@ crossword =
                 number_array.push(number_down);
               }
               
-              // get number across or set it to 0
-              var number_across = 
-                this.parentElement.getAttribute("number_across");
+              // get number right or set it to 0
+              var number_right = 
+                this.parentElement.getAttribute("number_right");
 
-              if(number_across !== null ){
-                direction_array.push("across");
-                number_across = Number(number_across.substr(1));
-                number_array.push(number_across);
+              if(number_right !== null ){
+                direction_array.push("right");
+                number_right = Number(number_right.substr(1));
+                number_array.push(number_right);
               }
 
               for ( var i = 0; i < direction_array.length; i++ ) {

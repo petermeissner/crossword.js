@@ -23,27 +23,27 @@ td::before {
   font-weight: bold;
 }
 
-.active.solved_across, active.solved_down, active.solved_letter, active.solved_grid {
+.active.solved_right, active.solved_down, active.solved_letter, active.solved_grid {
   background-color:#33CC80;
   font-weight: bold;
 }
 
-.active_input.solved_across, .active_input.solved_down, .active_input.solved_letter, .active_input.solved_grid {
+.active_input.solved_right, .active_input.solved_down, .active_input.solved_letter, .active_input.solved_grid {
   background-color:#33CC80;
   font-weight: bold;
 }
 
-.active_hover.solved_across, .active_hover.solved_down, .active_hover.active_input.solved_letter, active_hover.solved_grid {
+.active_hover.solved_right, .active_hover.solved_down, .active_hover.active_input.solved_letter, active_hover.solved_grid {
   background-color:#33CC80;
   font-weight: bold;
 }
 
-.solved_across, .solved_down, .solved_letter, .solved_grid {
+.solved_right, .solved_down, .solved_letter, .solved_grid {
   background-color: lightgreen;
   font-weight: bold;
 }
 
-.across_wrapper, .down_wrapper, .crossword_wrapper {
+.right_wrapper, .down_wrapper, .crossword_wrapper {
   min-width: 10%;
   max-width: 45%;
   display: inline-block;
@@ -56,8 +56,8 @@ td::before {
   font-weight: bold;
 }
 
-.across_wrapper:before {
-  content: "across";
+.right_wrapper:before {
+  content: "right";
   padding-left: 10px;
   font-weight: bold;
 }
