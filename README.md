@@ -14,7 +14,7 @@
 
 
 **see also**
-- Crossword generation (language R): https://github.com/petermeissner/crossword
+- Crossword generation (language R): https://github.com/petermeissner/crossword.r
 
 
 
